@@ -54,6 +54,25 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
+	physx::PxTransform trans(physx::PxVec3(5.0f, 5.0f, 0.0f));
+
+	//blanca
+	//shape se borra solo si esta definido dentro, sino hay que borrarlo a mano
+	PxTransform* trans0 = new PxTransform(0.0f, 0.0f, 0.0f);
+	RenderItem* sphere = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans0, Vector4(1.0f,1.0f,1.0f,1.0f));
+	
+	//verde
+	PxTransform* trans1 = new PxTransform(0.0f, 4.0f, 0.0f);
+	RenderItem* sphere1 = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans1, Vector4(0.0f,1.0f,0.0f,1.0f));
+	
+	//rojo
+	PxTransform* trans2 = new PxTransform(-4.0f, -4.0f, 0.0f);
+	RenderItem* sphere2 = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans2, Vector4(1.0f,0.0f,0.0f,1.0f));
+	
+	//azul
+	PxTransform* trans3 = new PxTransform(4.0f, -4.0f, 0.0f);
+	RenderItem* sphere3 = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans3, Vector4(0.0f,0.0f,1.0f,1.0f));
+	
 	}
 
 
