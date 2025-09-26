@@ -1,30 +1,30 @@
 #include "Vector3D.h"
 #include <algorithm>
 
-Vector3D::Vector3D(int x2, int y2, int z2)
+Vector3D::Vector3D(float x2, float y2, float z2)
 {
 	x = x2; y = y2; z = z2;
 }
 
-void Vector3D::normalize(Vector3D v)
+void Vector3D::normalize()
 {
-	int mod = modulo(v);
-	v.x = v.x / mod;
-	v.y = v.y / mod;
-	v.z = v.z / mod;
+	float mod = sqrt(x * x + y * y + z * z);
+	x = x / mod;
+	y = y / mod;
+	z = z / mod;
 }
 
-int Vector3D::modulo(const Vector3D v)
+float Vector3D::modulo()
 {
-	return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+	return sqrt(x * x + y * y + z * z);
 }
 
-int Vector3D::productoEscalar(const Vector3D a, const Vector3D b)
+float Vector3D::productoEscalar(const Vector3D a)
 {
-	return a.x * b.x + a.y * b.y + a.z * b.z;
+	return a.x * x + a.y * y + a.z * z;
 }
 
-Vector3D Vector3D::numeroPorVec(int n, Vector3D a)
+Vector3D Vector3D::numeroPorVec(int n) 
 {
-	return { n * a.x,n * a.y,n * a.z };
+	return { n * x,n * y,n * z };
 }

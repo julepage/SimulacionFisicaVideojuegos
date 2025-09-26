@@ -7,6 +7,7 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
+#include "Vector3D.h"
 
 #include <iostream>
 
@@ -18,16 +19,16 @@ using namespace physx;
 PxDefaultAllocator		gAllocator;
 PxDefaultErrorCallback	gErrorCallback;
 
-PxFoundation*			gFoundation = NULL;
-PxPhysics*				gPhysics	= NULL;
+PxFoundation* gFoundation = NULL;
+PxPhysics* gPhysics = NULL;
 
 
-PxMaterial*				gMaterial	= NULL;
+PxMaterial* gMaterial = NULL;
 
-PxPvd*                  gPvd        = NULL;
+PxPvd* gPvd = NULL;
 
-PxDefaultCpuDispatcher*	gDispatcher = NULL;
-PxScene*				gScene      = NULL;
+PxDefaultCpuDispatcher* gDispatcher = NULL;
+PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
 
 
@@ -40,9 +41,9 @@ void initPhysics(bool interactive)
 
 	gPvd = PxCreatePvd(*gFoundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-	gPvd->connect(*transport,PxPvdInstrumentationFlag::eALL);
+	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
-	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
+	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
@@ -56,24 +57,27 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 	physx::PxTransform trans(physx::PxVec3(5.0f, 5.0f, 0.0f));
 
-	//blanca
-	//shape se borra solo si esta definido dentro, sino hay que borrarlo a mano
-	PxTransform* trans0 = new PxTransform(0.0f, 0.0f, 0.0f);
-	RenderItem* sphere = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans0, Vector4(1.0f,1.0f,1.0f,1.0f));
-	
-	//verde
-	PxTransform* trans1 = new PxTransform(0.0f, 4.0f, 0.0f);
-	RenderItem* sphere1 = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans1, Vector4(0.0f,1.0f,0.0f,1.0f));
-	
-	//rojo
-	PxTransform* trans2 = new PxTransform(-4.0f, -4.0f, 0.0f);
-	RenderItem* sphere2 = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans2, Vector4(1.0f,0.0f,0.0f,1.0f));
-	
-	//azul
-	PxTransform* trans3 = new PxTransform(4.0f, -4.0f, 0.0f);
-	RenderItem* sphere3 = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), trans3, Vector4(0.0f,0.0f,1.0f,1.0f));
-	
-	}
+	Vector3D X(1, 0, 0);
+	Vector3D Y(0, 1, 0);
+	Vector3D Z(0, 0, 1);
+	Vector3D centro(0, 0, 0);
+
+	Vector3D eX = X.numeroPorVec(4);
+	Vector3D eY = Y.numeroPorVec(4);
+	Vector3D eZ = Z.numeroPorVec(4);
+
+	PxTransform* ejeX = new PxTransform(PxVec3(eX.getX(), eX.getY(), eX.getZ()));
+	PxTransform* ejeY = new PxTransform(PxVec3(eY.getX(), eY.getY(), eY.getZ()));
+	PxTransform* ejeZ = new PxTransform(PxVec3(eZ.getX(), eZ.getY(), eZ.getZ()));
+	PxTransform* c = new PxTransform(PxVec3(centro.getX(), centro.getY(), centro.getZ()));
+
+	RenderItem* Xaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), ejeX, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+	RenderItem* Yaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), ejeY, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+	RenderItem* Zaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), ejeZ, Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+	RenderItem* center = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), c, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+
+
+}
 
 
 // Function to configure what happens in each step of physics
@@ -97,23 +101,23 @@ void cleanupPhysics(bool interactive)
 	gScene->release();
 	gDispatcher->release();
 	// -----------------------------------------------------
-	gPhysics->release();	
+	gPhysics->release();
 	PxPvdTransport* transport = gPvd->getTransport();
 	gPvd->release();
 	transport->release();
-	
+
 	gFoundation->release();
-	}
+}
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
 
-	switch(toupper(key))
+	switch (toupper(key))
 	{
-	//case 'B': break;
-	//case ' ':	break;
+		//case 'B': break;
+		//case ' ':	break;
 	case ' ':
 	{
 		break;
@@ -130,7 +134,7 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 }
 
 
-int main(int, const char*const*)
+int main(int, const char* const*)
 {
 #ifndef OFFLINE_EXECUTION 
 	extern void renderLoop();
@@ -138,7 +142,7 @@ int main(int, const char*const*)
 #else
 	static const PxU32 frameCount = 100;
 	initPhysics(false);
-	for(PxU32 i=0; i<frameCount; i++)
+	for (PxU32 i = 0; i < frameCount; i++)
 		stepPhysics(false);
 	cleanupPhysics(false);
 #endif

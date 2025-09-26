@@ -2,15 +2,20 @@
 class Vector3D
 {
 private:
-	int x, y, z;
+	float x, y, z;
 public:
-	Vector3D() {};
+	Vector3D() { x = 0; y = 0; z = 0; };
 	~Vector3D() {};
-	Vector3D(int x, int y, int z);
-	void normalize(Vector3D v);
-	int modulo(const Vector3D v);
-	int productoEscalar(const Vector3D a, const Vector3D b);
-	Vector3D numeroPorVec(int n, Vector3D a);
+	Vector3D(float x, float y, float z);
+	void normalize();
+	float modulo();
+	float productoEscalar(const Vector3D a);
+	Vector3D numeroPorVec(int n) ;
+
+	//getters
+	float getX() { return x; };
+	float getY() { return y; };
+	float getZ() { return z; };
 
 	//operadores
 	//suma
