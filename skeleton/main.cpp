@@ -8,6 +8,7 @@
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
 #include "Vector3D.h"
+#include "Particula.h"
 
 #include <iostream>
 
@@ -26,7 +27,7 @@ PxPhysics* gPhysics = NULL;
 PxMaterial* gMaterial = NULL;
 
 PxPvd* gPvd = NULL;
-
+Particula* p = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
@@ -57,6 +58,7 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 	physx::PxTransform trans(physx::PxVec3(5.0f, 5.0f, 0.0f));
 
+	//ejes
 	Vector3D X(1, 0, 0);
 	Vector3D Y(0, 1, 0);
 	Vector3D Z(0, 0, 1);
@@ -66,17 +68,14 @@ void initPhysics(bool interactive)
 	Vector3D eY = Y.numeroPorVec(4);
 	Vector3D eZ = Z.numeroPorVec(4);
 
-	PxTransform* ejeX = new PxTransform(PxVec3(eX.getX(), eX.getY(), eX.getZ()));
-	PxTransform* ejeY = new PxTransform(PxVec3(eY.getX(), eY.getY(), eY.getZ()));
-	PxTransform* ejeZ = new PxTransform(PxVec3(eZ.getX(), eZ.getY(), eZ.getZ()));
-	PxTransform* c = new PxTransform(PxVec3(centro.getX(), centro.getY(), centro.getZ()));
+	RenderItem* Xaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eX.getX(), eX.getY(), eX.getZ())), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+	RenderItem* Yaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eY.getX(), eY.getY(), eY.getZ())), Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+	RenderItem* Zaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eZ.getX(), eZ.getY(), eZ.getZ())), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+	RenderItem* center = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(centro.getX(), centro.getY(), centro.getZ())), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	RenderItem* Xaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), ejeX, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-	RenderItem* Yaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), ejeY, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-	RenderItem* Zaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), ejeZ, Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-	RenderItem* center = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), c, Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-
-
+	//PARTICULA
+	p = new Particula(Vector3D(1, 1, 0), Vector3D(1, 0, 0), 1.0f, 0.998f);
+	
 }
 
 
@@ -89,6 +88,7 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
+	p->integrate(t);
 }
 
 // Function to clean data
@@ -107,6 +107,8 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 
 	gFoundation->release();
+
+	//borrar PARTICULA!!!!
 }
 
 // Function called when a key is pressed

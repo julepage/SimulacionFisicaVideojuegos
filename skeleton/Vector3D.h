@@ -10,24 +10,27 @@ public:
 	void normalize();
 	float modulo();
 	float productoEscalar(const Vector3D a);
-	Vector3D numeroPorVec(int n) ;
+	Vector3D numeroPorVec(float n) ;
 
 	//getters
-	float getX() { return x; };
-	float getY() { return y; };
-	float getZ() { return z; };
+	float getX() const { return x; };
+	float getY() const { return y; };
+	float getZ() const { return z; };
 
 	//operadores
 	//suma
 	Vector3D operator+(const Vector3D a) {
 		return { x + a.x, y + a.y, z + a.z };
 	}
+	Vector3D operator+(float a) {
+		return { x + a, y + a, z + a };
+	}
 	//resta
 	Vector3D operator-(const Vector3D a) {
 		return { x - a.x, y - a.y, z - a.z };
 	}
 	//mult
-	Vector3D operator*(const Vector3D a) {
+	 Vector3D operator*(const Vector3D a) {
 		return { x * a.x, y * a.y, z * a.z };
 	}
 	//asignacion

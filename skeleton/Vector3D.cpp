@@ -24,7 +24,7 @@ float Vector3D::productoEscalar(const Vector3D a)
 	return a.x * x + a.y * y + a.z * z;
 }
 
-Vector3D Vector3D::numeroPorVec(int n) 
+Vector3D Vector3D::numeroPorVec(float n) 
 {
 	return { n * x,n * y,n * z };
 }
