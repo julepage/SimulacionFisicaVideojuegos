@@ -6,12 +6,13 @@ Vector3D::Vector3D(float x2, float y2, float z2)
 	x = x2; y = y2; z = z2;
 }
 
-void Vector3D::normalize()
+Vector3D Vector3D::normalize()
 {
 	float mod = sqrt(x * x + y * y + z * z);
 	x = x / mod;
 	y = y / mod;
 	z = z / mod;
+	return *this;
 }
 
 float Vector3D::modulo()
@@ -19,7 +20,7 @@ float Vector3D::modulo()
 	return sqrt(x * x + y * y + z * z);
 }
 
-float Vector3D::productoEscalar(const Vector3D a)
+float Vector3D::productoEscalar(const Vector3D& a)
 {
 	return a.x * x + a.y * y + a.z * z;
 }

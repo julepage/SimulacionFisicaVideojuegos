@@ -9,6 +9,7 @@
 #include "callbacks.hpp"
 #include "Vector3D.h"
 #include "Particula.h"
+#include "Proyectil.h"
 
 #include <iostream>
 
@@ -31,6 +32,8 @@ Particula* p = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
+//PARTICULAS
+std::vector<Proyectil*> pistolas;
 
 
 // Initialize physics engine
@@ -73,9 +76,7 @@ void initPhysics(bool interactive)
 	RenderItem* Zaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eZ.getX(), eZ.getY(), eZ.getZ())), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
 	RenderItem* center = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(centro.getX(), centro.getY(), centro.getZ())), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	//PARTICULA
-	p = new Particula(Vector3D(1, 1, 0), Vector3D(1, 0, 0), 1.0f, 0.998f);
-	
+
 }
 
 
@@ -87,8 +88,12 @@ void stepPhysics(bool interactive, double t)
 	PX_UNUSED(interactive);
 
 	gScene->simulate(t);
+	for (auto p : pistolas)
+	{
+		p->integrate(t);
+	}
+
 	gScene->fetchResults(true);
-	p->integrate(t);
 }
 
 // Function to clean data
@@ -109,6 +114,10 @@ void cleanupPhysics(bool interactive)
 	gFoundation->release();
 
 	//borrar PARTICULA!!!!
+	for (auto p : pistolas)
+	{
+		delete p;
+	}
 }
 
 // Function called when a key is pressed
@@ -122,6 +131,14 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		//case ' ':	break;
 	case ' ':
 	{
+		auto eyePx = GetCamera()->getEye();  // PxVec3
+		auto dirPx = GetCamera()->getDir();  // PxVec3
+
+		Vector3D eye(eyePx.x, eyePx.y, eyePx.z);
+		Vector3D dir(dirPx.x, dirPx.y, dirPx.z);
+
+		pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f));
+		
 		break;
 	}
 	default:

@@ -7,15 +7,20 @@ public:
 	Vector3D() { x = 0; y = 0; z = 0; };
 	~Vector3D() {};
 	Vector3D(float x, float y, float z);
-	void normalize();
+	Vector3D normalize();
 	float modulo();
-	float productoEscalar(const Vector3D a);
-	Vector3D numeroPorVec(float n) ;
+	float productoEscalar(const Vector3D& a);
+	Vector3D numeroPorVec(float n);
 
 	//getters
 	float getX() const { return x; };
 	float getY() const { return y; };
 	float getZ() const { return z; };
+
+	//setters
+	void setX(float newX) { x = newX; }
+	void setY(float newY) { y = newY; }
+	void setZ(float newZ) { z = newZ; }
 
 	//operadores
 	//suma
@@ -30,8 +35,11 @@ public:
 		return { x - a.x, y - a.y, z - a.z };
 	}
 	//mult
-	 Vector3D operator*(const Vector3D a) {
-		return { x * a.x, y * a.y, z * a.z };
+	Vector3D operator*(float n) const {
+		return { x * n, y * n, z * n };
+	}
+	float operator* (const Vector3D& a) const {
+		return a.x * x + a.y * y + a.z * z;
 	}
 	//asignacion
 	void operator=(const Vector3D& a) {
@@ -39,5 +47,6 @@ public:
 		y = a.y;
 		z = a.z;
 	}
+
 };
 

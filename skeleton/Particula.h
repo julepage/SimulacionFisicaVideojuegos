@@ -6,16 +6,21 @@
 class Particula
 {
 public:
-	Particula(Vector3D pos, Vector3D vel, float acc, float d);
+	Particula(Vector3D pos, Vector3D vel, Vector3D acc, float d, float masa = 1.0, float g = 9.8);
 	virtual ~Particula() { DeregisterRenderItem(renderItem); renderItem = nullptr; };
 	
-	void integrate(double t);
+	virtual void integrate(double t);
 
-private:
+	Vector3D getVel() { return velocidad; };
+	void setAc(Vector3D Acc) { ac = Acc; }
+
+protected:
 	Vector3D velocidad;
 	physx::PxTransform pose;
 	RenderItem* renderItem;
-	float ac;
+	Vector3D ac;
 	float damping;
+	float masa;
+	float gravedad;
 };
 
