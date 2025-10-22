@@ -10,6 +10,8 @@
 #include "Vector3D.h"
 #include "Particula.h"
 #include "Proyectil.h"
+#include "FuenteParticulas.h"
+#include "SistemaParticulas.h"
 
 #include <iostream>
 
@@ -32,8 +34,41 @@ Particula* p = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
+/////////////////////////////////////////////////////////////
+//Ejes
+RenderItem* Xaxis;
+RenderItem* Yaxis;
+RenderItem* Zaxis;
+RenderItem* center;
 //PARTICULAS
 std::vector<Proyectil*> pistolas;
+//delta
+double deltaTime = 0.016; // inicialización global
+//Fuente particulas
+FuenteParticulas* miFuente = nullptr;
+//sistema
+SistemaParticulas* sistema;
+
+
+//creacion de ejes
+void creacionEjes() {
+
+	//ejes
+	Vector3D X(1, 0, 0);
+	Vector3D Y(0, 1, 0);
+	Vector3D Z(0, 0, 1);
+	Vector3D centro(0, 0, 0);
+
+	Vector3D eX = X.numeroPorVec(4);
+	Vector3D eY = Y.numeroPorVec(4);
+	Vector3D eZ = Z.numeroPorVec(4);
+
+	Xaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eX.getX(), eX.getY(), eX.getZ())), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+	Yaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eY.getX(), eY.getY(), eY.getZ())), Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+	Zaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eZ.getX(), eZ.getY(), eZ.getZ())), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+	center = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(centro.getX(), centro.getY(), centro.getZ())), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+
+}
 
 
 // Initialize physics engine
@@ -62,20 +97,7 @@ void initPhysics(bool interactive)
 	physx::PxTransform trans(physx::PxVec3(5.0f, 5.0f, 0.0f));
 
 	//ejes
-	Vector3D X(1, 0, 0);
-	Vector3D Y(0, 1, 0);
-	Vector3D Z(0, 0, 1);
-	Vector3D centro(0, 0, 0);
-
-	Vector3D eX = X.numeroPorVec(4);
-	Vector3D eY = Y.numeroPorVec(4);
-	Vector3D eZ = Z.numeroPorVec(4);
-
-	RenderItem* Xaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eX.getX(), eX.getY(), eX.getZ())), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-	RenderItem* Yaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eY.getX(), eY.getY(), eY.getZ())), Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-	RenderItem* Zaxis = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(eZ.getX(), eZ.getY(), eZ.getZ())), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-	RenderItem* center = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), new PxTransform(PxVec3(centro.getX(), centro.getY(), centro.getZ())), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-
+	creacionEjes();
 
 }
 
@@ -85,6 +107,7 @@ void initPhysics(bool interactive)
 // t: time passed since last call in milliseconds
 void stepPhysics(bool interactive, double t)
 {
+	deltaTime = t; // actualizar cada frame
 	PX_UNUSED(interactive);
 
 	gScene->simulate(t);
@@ -92,6 +115,14 @@ void stepPhysics(bool interactive, double t)
 	{
 		p->integrate(t);
 	}
+
+	if (miFuente)
+	{
+		miFuente->emitir(deltaTime);
+		miFuente->actualizar(t); 
+		sistema->mata(t);
+	}
+
 
 	gScene->fetchResults(true);
 }
@@ -113,10 +144,22 @@ void cleanupPhysics(bool interactive)
 
 	gFoundation->release();
 
+	//borrar ejes
+	DeregisterRenderItem(Xaxis);
+	DeregisterRenderItem(Yaxis);
+	DeregisterRenderItem(Zaxis);
+	DeregisterRenderItem(center);
+
 	//borrar PARTICULA!!!!
 	for (auto p : pistolas)
 	{
 		delete p;
+	}
+	//borrar fuente
+	if (miFuente) {
+		delete miFuente;
+		miFuente = nullptr;
+		delete sistema;
 	}
 }
 
@@ -138,7 +181,24 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		Vector3D dir(dirPx.x, dirPx.y, dirPx.z);
 
 		pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f));
-		
+
+		break;
+	}
+	case 'B': {
+
+		if (!miFuente) {
+			Vector3D posicionFuente(0.0f, 0.0f, 0.0f);
+			Vector3D direccionFuente(0.0f, 1.0f, 0.0f);
+			float velocidadParticula = 20.0f;
+			float tasaEmision = 50.0f;
+
+			miFuente = new FuenteParticulas(posicionFuente, direccionFuente, velocidadParticula, tasaEmision);
+			sistema = new SistemaParticulas(*miFuente);
+		}
+
+		miFuente->emitir(deltaTime);
+
+
 		break;
 	}
 	default:

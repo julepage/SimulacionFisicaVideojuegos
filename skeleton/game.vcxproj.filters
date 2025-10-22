@@ -13,6 +13,8 @@
     <ClCompile Include="Vector3D.cpp" />
     <ClCompile Include="Particula.cpp" />
     <ClCompile Include="Proyectil.cpp" />
+    <ClCompile Include="FuenteParticulas.cpp" />
+    <ClCompile Include="SistemaParticulas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -27,6 +29,8 @@
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Particula.h" />
     <ClInclude Include="Proyectil.h" />
+    <ClInclude Include="FuenteParticulas.h" />
+    <ClInclude Include="SistemaParticulas.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
