@@ -15,6 +15,9 @@
     <ClCompile Include="Proyectil.cpp" />
     <ClCompile Include="FuenteParticulas.cpp" />
     <ClCompile Include="SistemaParticulas.cpp" />
+    <ClCompile Include="Viento.cpp" />
+    <ClCompile Include="Torbellino.cpp" />
+    <ClCompile Include="Explosion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -31,6 +34,10 @@
     <ClInclude Include="Proyectil.h" />
     <ClInclude Include="FuenteParticulas.h" />
     <ClInclude Include="SistemaParticulas.h" />
+    <ClInclude Include="GeneradorFuerzas.h" />
+    <ClInclude Include="Viento.h" />
+    <ClInclude Include="Torbellino.h" />
+    <ClInclude Include="Explosion.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

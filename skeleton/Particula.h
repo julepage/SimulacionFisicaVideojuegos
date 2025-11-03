@@ -15,10 +15,12 @@ public:
 	Vector3D getPos() { return Vector3D(pose.p.x, pose.p.y, pose.p.z); };
 	//getter
 	float getVidas() const { return vida; };
+	float getMasa() const { return masa; };
 	Vector3D getPosIni() const { return posIni; };
 	//setter
 	void setVidas(float v) { vida = v; }
 	void setAc(Vector3D Acc) { ac = Acc; }
+	void addFuerza(const Vector3D& f) { fuerzaAcumulada = fuerzaAcumulada + f; };
 
 protected:
 	Vector3D velocidad;
@@ -30,5 +32,7 @@ protected:
 	float masa;
 	float gravedad;
 	float vida;//Segumdo de vida
+
+	Vector3D fuerzaAcumulada;
 };
 

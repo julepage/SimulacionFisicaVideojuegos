@@ -30,6 +30,6 @@ public:
 private:
 	FuenteParticulas& fuente;
     //distancia maxima que se pueden alejar sin ser eliminadas
-    const float RADIO_MAX = 20.0f;
+    const float RADIO_MAX = 200.0f;
 };
 

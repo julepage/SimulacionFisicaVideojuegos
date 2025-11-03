@@ -12,6 +12,9 @@
 #include "Proyectil.h"
 #include "FuenteParticulas.h"
 #include "SistemaParticulas.h"
+#include "Viento.h"
+#include "Torbellino.h"
+#include "Explosion.h"
 
 #include <iostream>
 
@@ -48,6 +51,10 @@ double deltaTime = 0.016; // inicialización global
 FuenteParticulas* miFuente = nullptr;
 //sistema
 SistemaParticulas* sistema;
+//FUERZAS
+Viento* viento = nullptr;
+Torbellino* torbellino = nullptr;
+Explosion* explosion = nullptr;
 
 
 //creacion de ejes
@@ -99,6 +106,16 @@ void initPhysics(bool interactive)
 	//ejes
 	creacionEjes();
 
+	//Viento
+	viento = new Viento(200.0f, Vector3D(1, 0, 0), 0.01f);
+
+	//torbellino
+	torbellino = new Torbellino(Vector3D(0, 0, 0), 50.0f, 10.0f);
+
+	//Explosion
+	explosion = new Explosion(5000.0f, 10.0f, Vector3D(0, 0, 0), 5.0f, 20.0f);
+
+
 }
 
 
@@ -118,9 +135,21 @@ void stepPhysics(bool interactive, double t)
 
 	if (miFuente)
 	{
+		if (explosion)
+			explosion->update(deltaTime);
+
 		miFuente->emitir(deltaTime);
-		miFuente->actualizar(t); 
-		sistema->mata(t);
+		for (auto& p : miFuente->getParticulas())  // asumiendo que tienes getter
+		{
+			if (torbellino)
+				torbellino->updateFuerzas(p);
+			/*if (viento)
+				viento->updateFuerzas(p);
+			if (explosion)
+				explosion->updateFuerzas(p, deltaTime);*/
+		}
+		miFuente->actualizar(deltaTime);
+		sistema->mata(deltaTime);
 	}
 
 
@@ -161,6 +190,16 @@ void cleanupPhysics(bool interactive)
 		miFuente = nullptr;
 		delete sistema;
 	}
+	//borrar vientoo
+	if (viento) {
+		delete viento;
+		viento = nullptr;
+	}
+	//borrar torbe
+	if (torbellino) {
+		delete torbellino;
+		torbellino = nullptr;
+	}
 }
 
 // Function called when a key is pressed
@@ -199,6 +238,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		miFuente->emitir(deltaTime);
 
 
+		break;
+	}
+	case 'E': {
+		if (explosion && miFuente)
+			explosion->explosion();  // activa la explosión
 		break;
 	}
 	default:

@@ -254,6 +254,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="FuenteParticulas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particula.cpp" />
@@ -262,19 +263,25 @@
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="SistemaParticulas.cpp" />
+    <ClCompile Include="Torbellino.cpp" />
     <ClCompile Include="Vector3D.cpp" />
+    <ClCompile Include="Viento.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="FuenteParticulas.h" />
+    <ClInclude Include="GeneradorFuerzas.h" />
     <ClInclude Include="Particula.h" />
     <ClInclude Include="Proyectil.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="SistemaParticulas.h" />
+    <ClInclude Include="Torbellino.h" />
     <ClInclude Include="Vector3D.h" />
+    <ClInclude Include="Viento.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -41,6 +41,10 @@ public:
 	float operator* (const Vector3D& a) const {
 		return a.x * x + a.y * y + a.z * z;
 	}
+	//Div
+	Vector3D operator/(float s) const {
+		return Vector3D(x / s, y / s, z / s);
+	}
 	//asignacion
 	void operator=(const Vector3D& a) {
 		x = a.x;
