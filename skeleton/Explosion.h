@@ -11,7 +11,7 @@ public:
 	};
 	void updateFuerzas(Particula* p, double t) override;
 	void update(double t);
-	void explosion() { activa = !activa; t = 0.0f; };
+	void toggle() { GeneradorFuerzas::toggle(); this->t = 0.0f; };
 	virtual ~Explosion() {};
 private:
 	float K;//intensidad de la explosión
@@ -20,6 +20,5 @@ private:
 	float vel;//vel de expansión 
 	Vector3D centro;//centro de la explosión
 	float t = 0.0f;//tiempo que pasa desde que se activó
-	bool activa = false;
 };
 

@@ -255,6 +255,9 @@
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="FuenteAgua.cpp" />
+    <ClCompile Include="FuenteFuego.cpp" />
+    <ClCompile Include="FuenteFuegosArtificiales.cpp" />
     <ClCompile Include="FuenteParticulas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particula.cpp" />
@@ -264,6 +267,7 @@
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="SistemaParticulas.cpp" />
     <ClCompile Include="Torbellino.cpp" />
+    <ClCompile Include="TunelViento.cpp" />
     <ClCompile Include="Vector3D.cpp" />
     <ClCompile Include="Viento.cpp" />
   </ItemGroup>
@@ -271,6 +275,9 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="FuenteAgua.h" />
+    <ClInclude Include="FuenteFuego.h" />
+    <ClInclude Include="FuenteFuegosArtificiales.h" />
     <ClInclude Include="FuenteParticulas.h" />
     <ClInclude Include="GeneradorFuerzas.h" />
     <ClInclude Include="Particula.h" />
@@ -280,6 +287,7 @@
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="SistemaParticulas.h" />
     <ClInclude Include="Torbellino.h" />
+    <ClInclude Include="TunelViento.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Viento.h" />
   </ItemGroup>

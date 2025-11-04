@@ -4,31 +4,59 @@
 class SistemaParticulas
 {
 public:
-	SistemaParticulas(FuenteParticulas& f) : fuente(f) {}
+    SistemaParticulas() = default;
+
+	virtual ~SistemaParticulas() {
+        for (auto f : fuentes)
+            delete f;
+        fuentes.clear();
+    }
 
 	void mata(double t) {
 
-		auto& particulas = fuente.getParticulas(); //referencia a vector particulas
+        for (auto* fuente : fuentes)
+        {
+            auto& particulas = fuente->getParticulas(); //referencia a vector particulas
 
-		for (auto it = particulas.begin(); it != particulas.end(); ) {//iterador
-			Particula* p = *it;//cojo a la particula
+            for (auto it = particulas.begin(); it != particulas.end(); ) {//iterador
+                Particula* p = *it;//cojo a la particula
 
-            Vector3D diferencia = p->getPos() - p->getPosIni();
-            float distancia = diferencia.modulo();//ya es como valor absoluto, es el modulo de la distancia
-            
-            if (p->getVidas() <= 0.0f || distancia > RADIO_MAX) {
-                delete p;
-                it = particulas.erase(it);//actualizo puntero it
+                Vector3D diferencia = p->getPos() - p->getPosIni();
+                float distancia = diferencia.modulo();//ya es como valor absoluto, es el modulo de la distancia
+
+                if (p->getVidas() <= 0.0f || distancia > RADIO_MAX) {
+                    delete p;
+                    it = particulas.erase(it);//actualizo puntero it
+                }
+                else {
+                    ++it;
+                }
             }
-            else {
-                ++it;
-            }
-		}
+        }
 	}
 
-	virtual ~SistemaParticulas() {}
+    //para actualizar todo desde el main
+    void actualizar(float t)
+    {
+        for (auto f : fuentes)
+        {
+            f->emitir(t);
+            f->actualizar(t);
+        }
+    }
+
+    void addFuente(FuenteParticulas* fuente)
+    {
+        fuentes.push_back(fuente);
+    }
+
+    //getter
+   size_t getNumFuentes() const { return fuentes.size(); }
+   const std::vector<FuenteParticulas*>& getFuentes() const { return fuentes; }
+
+    
 private:
-	FuenteParticulas& fuente;
+    std::vector<FuenteParticulas*> fuentes;
     //distancia maxima que se pueden alejar sin ser eliminadas
     const float RADIO_MAX = 200.0f;
 };

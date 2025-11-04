@@ -2,10 +2,16 @@
 #include <iostream>
 using namespace physx;
 
-Particula::Particula(Vector3D pos, Vector3D vel, Vector3D acc, float d, float mass, float g, float vidas) : pose(pos.getX(), pos.getY(), pos.getZ()), velocidad(vel),
-ac(acc), damping(d), masa(mass), gravedad(g), vida(vidas), posIni(pos), fuerzaAcumulada(0, 0, 0)
+physx::PxSphereGeometry Particula::defaultSphere(1.0f);
+
+Particula::Particula(Vector3D pos, Vector3D vel, Vector3D acc, Vector4 color, physx::PxGeometry* forma, float d, float mass, float g, float vidas): pose(pos.getX(), pos.getY(), pos.getZ()), velocidad(vel),
+ac(acc), damping(d), masa(mass), gravedad(g), vida(vidas), posIni(pos), fuerzaAcumulada(0, 0, 0), color(color), forma(forma)
 {
-	renderItem = new RenderItem(CreateShape(PxSphereGeometry(1.0f)), &pose, Vector4(1.0f, 1.0f, 0.0f, 1.0f));//le tengo que pasar la direccion de donde apunta pose
+	if (forma == nullptr)
+		this->forma = &defaultSphere;
+	else
+		this->forma = forma;
+	renderItem = new RenderItem(CreateShape(*this->forma), &pose,color);//le tengo que pasar la direccion de donde apunta pose
 
 }
 

@@ -48,11 +48,18 @@ public:
 	physx::PxVec3		getEye()	const;
 	physx::PxVec3		getDir()	const;
 	physx::PxTransform	getTransform() const;
+	void setDir(physx::PxVec3 d) { mDir = d; };
+
+	void moveForward(float dt = 1.0f);
+	void moveBackward(float dt = 1.0f);
+	void strafeLeft(float dt = 1.0f);
+	void strafeRight(float dt = 1.0f);
 private:
 	physx::PxVec3	mEye;
 	physx::PxVec3	mDir;
 	int				mMouseX;
 	int				mMouseY;
+	float			mMoveSpeed = 2.0f;
 };
 
 

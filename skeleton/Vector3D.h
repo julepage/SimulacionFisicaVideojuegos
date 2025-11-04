@@ -5,7 +5,7 @@ private:
 	float x, y, z;
 public:
 	Vector3D() { x = 0; y = 0; z = 0; };
-	~Vector3D() {};
+	virtual ~Vector3D() = default;
 	Vector3D(float x, float y, float z);
 	Vector3D normalize();
 	float modulo();

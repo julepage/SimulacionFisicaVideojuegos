@@ -18,6 +18,10 @@
     <ClCompile Include="Viento.cpp" />
     <ClCompile Include="Torbellino.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="FuenteAgua.cpp" />
+    <ClCompile Include="TunelViento.cpp" />
+    <ClCompile Include="FuenteFuegosArtificiales.cpp" />
+    <ClCompile Include="FuenteFuego.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -38,6 +42,10 @@
     <ClInclude Include="Viento.h" />
     <ClInclude Include="Torbellino.h" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="FuenteAgua.h" />
+    <ClInclude Include="TunelViento.h" />
+    <ClInclude Include="FuenteFuegosArtificiales.h" />
+    <ClInclude Include="FuenteFuego.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

@@ -16,12 +16,12 @@ public:
 		particulas.clear();
 	};
 
-	void emitir(float t);//crear particulas
-	void actualizar(float t);//mueve, elimina... particulas
+	virtual void emitir(float t) = 0;//crear particulas
+	virtual void actualizar(float t);//mueve, elimina... particulas
 
 	//getter
 	std::vector<Particula*>& getParticulas() { return particulas; }
-
+	const Vector3D& getPos() const { return pos; }
 
 protected:
 	Vector3D pos;//de donde sale

@@ -11,10 +11,14 @@
 #include "Particula.h"
 #include "Proyectil.h"
 #include "FuenteParticulas.h"
+#include "FuenteAgua.h"
 #include "SistemaParticulas.h"
 #include "Viento.h"
 #include "Torbellino.h"
 #include "Explosion.h"
+#include "TunelViento.h"
+#include "FuenteFuegosArtificiales.h"
+#include "FuenteFuego.h"
 
 #include <iostream>
 
@@ -47,14 +51,13 @@ RenderItem* center;
 std::vector<Proyectil*> pistolas;
 //delta
 double deltaTime = 0.016; // inicialización global
-//Fuente particulas
-FuenteParticulas* miFuente = nullptr;
 //sistema
-SistemaParticulas* sistema;
+SistemaParticulas* sistema = nullptr;
 //FUERZAS
 Viento* viento = nullptr;
 Torbellino* torbellino = nullptr;
 Explosion* explosion = nullptr;
+TunelViento* tunelViento = nullptr;
 
 
 //creacion de ejes
@@ -106,15 +109,21 @@ void initPhysics(bool interactive)
 	//ejes
 	creacionEjes();
 
+	//sistema
+	sistema = new SistemaParticulas();
+
 	//Viento
-	viento = new Viento(200.0f, Vector3D(1, 0, 0), 0.01f);
+	viento = new Viento(2000.0f, Vector3D(1, 0, 0), 0.01f);
 
 	//torbellino
-	torbellino = new Torbellino(Vector3D(0, 0, 0), 50.0f, 10.0f);
+	//torbellino = new Torbellino({ 0.0f, 0.0f, 0.0f }, 0.1f, 0.2f, 50.0f);
+	torbellino = new Torbellino(Vector3D(0, 0, 0), 50.0f, 20.0f, 30.0f);
 
 	//Explosion
-	explosion = new Explosion(5000.0f, 10.0f, Vector3D(0, 0, 0), 5.0f, 20.0f);
+	explosion = new Explosion(500.0f, 10.0f, Vector3D(2, 5, 0), 5.0f, 20.0f);
 
+	//tunel
+	tunelViento = new TunelViento(Vector3D(0, 0, 0), 200.0f, 10.0f);
 
 }
 
@@ -133,25 +142,31 @@ void stepPhysics(bool interactive, double t)
 		p->integrate(t);
 	}
 
-	if (miFuente)
-	{
+	if (sistema) {
+		// Primero actualizamos todas las fuentes
 		if (explosion)
 			explosion->update(deltaTime);
 
-		miFuente->emitir(deltaTime);
-		for (auto& p : miFuente->getParticulas())  // asumiendo que tienes getter
-		{
-			if (torbellino)
-				torbellino->updateFuerzas(p);
-			/*if (viento)
-				viento->updateFuerzas(p);
-			if (explosion)
-				explosion->updateFuerzas(p, deltaTime);*/
+		sistema->actualizar(deltaTime);//emite y actualiza constantemente
+		//aplica fuerzas SOLO si hay partic
+		for (auto fuente : sistema->getFuentes()) {
+
+			auto& particulas = fuente->getParticulas();
+			if (!particulas.empty()) {  // solo entramos si hay partículas
+				for (auto& pa : particulas) {
+					if (torbellino)
+						torbellino->updateFuerzas(pa);
+					if (viento)
+						viento->updateFuerzas(pa);
+					if (explosion)
+						explosion->updateFuerzas(pa, deltaTime);
+					if (tunelViento)
+						tunelViento->updateFuerzas(pa, deltaTime);
+				}
+			}
 		}
-		miFuente->actualizar(deltaTime);
 		sistema->mata(deltaTime);
 	}
-
 
 	gScene->fetchResults(true);
 }
@@ -180,25 +195,33 @@ void cleanupPhysics(bool interactive)
 	DeregisterRenderItem(center);
 
 	//borrar PARTICULA!!!!
-	for (auto p : pistolas)
+	for (auto pa : pistolas)
 	{
-		delete p;
+		delete pa;
 	}
-	//borrar fuente
-	if (miFuente) {
-		delete miFuente;
-		miFuente = nullptr;
+	//borrar sistema
+	if (sistema) {
 		delete sistema;
+		sistema = nullptr;
 	}
 	//borrar vientoo
 	if (viento) {
 		delete viento;
 		viento = nullptr;
 	}
+	if (tunelViento) {
+		delete tunelViento;
+		tunelViento = nullptr;
+	}
 	//borrar torbe
 	if (torbellino) {
 		delete torbellino;
 		torbellino = nullptr;
+	}
+	//borrar explos
+	if (explosion) {
+		delete explosion;
+		explosion = nullptr;
 	}
 }
 
@@ -209,8 +232,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 	switch (toupper(key))
 	{
-		//case 'B': break;
-		//case ' ':	break;
 	case ' ':
 	{
 		auto eyePx = GetCamera()->getEye();  // PxVec3
@@ -219,30 +240,87 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		Vector3D eye(eyePx.x, eyePx.y, eyePx.z);
 		Vector3D dir(dirPx.x, dirPx.y, dirPx.z);
 
-		pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f));
+		//pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f));
+		pistolas.push_back(new Proyectil(eye, dir, 20.0f, 15.0f, 0.65f));
 
+		break;
+	}
+	case 'M': {
+		auto eyePx = GetCamera()->getEye();  // PxVec3
+		auto dirPx = GetCamera()->getDir();  // PxVec3
+
+		Vector3D eye(eyePx.x, eyePx.y, eyePx.z);
+		Vector3D dir(dirPx.x, dirPx.y, dirPx.z);
+
+		physx::PxBoxGeometry disco(0.3f, 0.05f, 0.3f);
+		pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f, Vector4(1.0f, 0, 0, 1.0f), &disco));
 		break;
 	}
 	case 'B': {
 
-		if (!miFuente) {
+		if (sistema) {
 			Vector3D posicionFuente(0.0f, 0.0f, 0.0f);
 			Vector3D direccionFuente(0.0f, 1.0f, 0.0f);
 			float velocidadParticula = 20.0f;
 			float tasaEmision = 50.0f;
 
-			miFuente = new FuenteParticulas(posicionFuente, direccionFuente, velocidadParticula, tasaEmision);
-			sistema = new SistemaParticulas(*miFuente);
+			FuenteAgua* fuenteAgua = new FuenteAgua(posicionFuente, direccionFuente, velocidadParticula, tasaEmision);
+			sistema->addFuente(fuenteAgua);
+			fuenteAgua->emitir(deltaTime);
 		}
-
-		miFuente->emitir(deltaTime);
-
+		//emitir iba aaqui
 
 		break;
 	}
 	case 'E': {
-		if (explosion && miFuente)
-			explosion->explosion();  // activa la explosión
+		if (explosion)
+			explosion->toggle();  // activa la explosión
+		break;
+	}
+	case 'T': {
+		if (tunelViento)
+			tunelViento->toggle();
+		break;
+	}
+	case 'V': {
+		if (viento)
+			viento->toggle();
+		break;
+	}
+	case 'H': {
+		if (torbellino)
+			torbellino->toggle();
+		break;
+	}
+	case 'F': {
+
+		FuenteFuegosArtificiales* fuegos = new FuenteFuegosArtificiales(Vector3D(0, 0, 0), 30.0f, 2.0f);
+		sistema->addFuente(fuegos);
+		fuegos->emitir(deltaTime);
+
+		break;
+	}
+	case 'L': {
+		FuenteFuego* fuego = new FuenteFuego(Vector3D(0.0f, 0.0f, 0.0f), 10.0f, 5.0f, 40.0f);
+		sistema->addFuente(fuego);
+		fuego->emitir(deltaTime);
+		break;
+	}
+			//quiero que se pueda mover la camara pero que mientras se mueva la pelota la siga
+	case GLUT_KEY_UP: {
+		GetCamera()->moveForward();
+		break;
+	}
+	case GLUT_KEY_DOWN: {
+		GetCamera()->moveBackward();
+		break;
+	}
+	case GLUT_KEY_LEFT: {
+		GetCamera()->strafeLeft();
+		break;
+	}
+	case GLUT_KEY_RIGHT: {
+		GetCamera()->strafeRight();
 		break;
 	}
 	default:
