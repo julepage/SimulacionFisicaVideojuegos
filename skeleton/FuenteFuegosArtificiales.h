@@ -4,8 +4,8 @@
 
 class FuenteFuegosArtificiales : public FuenteParticulas {
 public:
-    FuenteFuegosArtificiales(Vector3D pos, float velIni, float tasa)
-        : FuenteParticulas(pos, Vector3D(0, 1, 0), velIni, tasa),//lo disparo hacia arriba
+    FuenteFuegosArtificiales(Vector3D pos, float velIni, float tasa, float dist)
+        : FuenteParticulas(pos, Vector3D(0, 1, 0), velIni, tasa, dist),//lo disparo hacia arriba
         generador(std::random_device{}()), distColor(0.0f, 1.0f) {
     }
 

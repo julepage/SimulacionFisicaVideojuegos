@@ -10,10 +10,20 @@ public:
 
 	virtual ~Proyectil() {};
 
+	// para el futuro el tiro de la bola de golf
+	void applyExternalVelocity(const Vector3D& v) noexcept { this->velocidad = v; disparado = true; }
+	void setSelectable(bool s) noexcept { selectable = s; }
+	bool isSelectable() const noexcept { return selectable && !disparado; }
+	bool isDisparado() const noexcept { return disparado; }
+
+
 protected:
 
 	float calcularMasaSimulada(float masaR, float velR, float velS);
 	float gravedadSimulada(float gR, float velR, float velS);
-	float velocidad;
+
+private:
+	bool selectable = true;
+	bool disparado = false;
 };
 

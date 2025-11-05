@@ -16,7 +16,9 @@ void FuenteAgua::emitir(float t)
 		velParticula.setZ(velParticula.getZ() + distUniforme(generador));
 
 		Particula* p = new Particula(pos, velParticula, Vector3D(0, -10, 0));
-		p->setHayFuerza(false);//PARA QUE NO AFECTEN FUERZAS	
+		p->permitirFuerza("tunelViento");
+		p->permitirFuerza("explosion");
+		p->permitirFuerza("torbellino");
 		particulas.push_back(p);
 	}
 }

@@ -2,6 +2,8 @@
 #include "Vector3D.h"
 #include <PxPhysicsAPI.h>
 #include "RenderUtils.hpp"
+#include <unordered_set>
+#include <string>
 
 class Particula
 {
@@ -11,6 +13,14 @@ public:
 
 	Particula(Vector3D pos, Vector3D vel, Vector3D acc, Vector4 color = Vector4(1.0f, 1.0f, 0.0f, 1.0f), physx::PxGeometry* forma = nullptr, float d = 1.0, float masa = 1.0, float g = 9.8, float vidas = 6.0f);
 	virtual ~Particula() { DeregisterRenderItem(renderItem); renderItem = nullptr; };
+
+	//constructora para fuegos artificiales
+	Particula(Vector3D pos, Vector3D vel, Vector3D acc, bool yaExplotada, Vector4 color = Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+		physx::PxGeometry* forma = nullptr, float d = 1.0, float masa = 1.0, float g = 9.8, float vidas = 6.0f)
+		: Particula(pos, vel, acc, color, forma, d, masa, g, vidas) // llama a la constructora principal
+	{
+		exploto = yaExplotada;
+	}
 
 	virtual void integrate(double t);
 
@@ -23,19 +33,25 @@ public:
 	Vector3D getPos()  const noexcept { return { pose.p.x, pose.p.y, pose.p.z }; };
 	bool getHayFuerza() const noexcept { return hayFuerza; };
 	//setter
-	void setVidas(float v) noexcept { vida = v; }
-	void setAc(Vector3D Acc) noexcept { ac = Acc; }
+	void setVidas(float v) noexcept { vida = v; };
+	void setAc(Vector3D Acc) noexcept { ac = Acc; };//da una aceleracion
 	void setHayFuerza(bool f) noexcept { hayFuerza = f; };
+	void addFuerza(const Vector3D& f) { fuerzaAcumulada = fuerzaAcumulada + f; };//añade fuerza luego se suma en integrate
 
-	void addFuerza(const Vector3D& f) { fuerzaAcumulada = fuerzaAcumulada + f; };
 
-	//constructora para fuegos artificiales
-	Particula(Vector3D pos, Vector3D vel, Vector3D acc, bool yaExplotada, Vector4 color = Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-		physx::PxGeometry* forma = nullptr, float d = 1.0, float masa = 1.0, float g = 9.8, float vidas = 6.0f)
-		: Particula(pos, vel, acc, color, forma, d, masa, g, vidas) // llama a la constructora principal
-	{
-		exploto = yaExplotada;
+	//CONTROL DE FUERZAS PERMITIDAS!!!
+	bool permiteFuerza(const std::string& tipo) const noexcept {
+		return fuerzasPermitidas.empty() || fuerzasPermitidas.count(tipo) > 0;
 	}
+
+	void permitirFuerza(const std::string& tipo) noexcept {
+		fuerzasPermitidas.insert(tipo);
+	}
+
+	void quitarFuerza(const std::string& tipo) noexcept {
+		fuerzasPermitidas.erase(tipo);
+	}
+
 
 	bool exploto;
 protected:
@@ -52,6 +68,8 @@ protected:
 	//Estetico
 	physx::PxGeometry* forma;
 	Vector4 color;
-	bool hayFuerza = true;
+	bool hayFuerza = true;//directamente desactiva todas las fierzas sobre la particula
+
+	std::unordered_set<std::string> fuerzasPermitidas;//permite q le afecten ciertas fuerzas
 };
 

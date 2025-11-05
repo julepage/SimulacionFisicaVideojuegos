@@ -64,11 +64,13 @@ void keyboardCallback(unsigned char key, int x, int y)
 void mouseCallback(int button, int state, int x, int y)
 {
 	sCamera->handleMouse(button, state, x, y);
+
 }
 
 void idleCallback()
 {
 	glutPostRedisplay();
+
 }
 
 float stepTime = 0.0f;
@@ -147,6 +149,7 @@ void renderLoop()
 	glutKeyboardFunc(keyboardCallback);
 	glutMouseFunc(mouseCallback);
 	glutMotionFunc(motionCallback);
+
 	motionCallback(0,0);
 
 	atexit(exitCallback);

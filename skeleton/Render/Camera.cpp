@@ -117,26 +117,6 @@ namespace Snippets
 		return mDir;
 	}
 
-	void Camera::moveForward(float dt)
-	{
-		mEye += mDir.getNormalized() * mMoveSpeed * dt;
-	}
-
-	void Camera::moveBackward(float dt)
-	{
-		mEye -= mDir.getNormalized() * mMoveSpeed * dt;
-	}
-
-	void Camera::strafeLeft(float dt)
-	{
-		PxVec3 right = PxVec3(mDir.z, 0, -mDir.x).getNormalized();
-		mEye -= right * mMoveSpeed * dt;
-	}
-
-	void Camera::strafeRight(float dt)
-	{
-		PxVec3 right = PxVec3(mDir.z, 0, -mDir.x).getNormalized();
-		mEye += right * mMoveSpeed * dt;
-	}
+	
 }
 

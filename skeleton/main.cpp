@@ -113,10 +113,9 @@ void initPhysics(bool interactive)
 	sistema = new SistemaParticulas();
 
 	//Viento
-	viento = new Viento(2000.0f, Vector3D(1, 0, 0), 0.01f);
+	viento = new Viento(200.0f, Vector3D(1, 0, 0), 0.01f);
 
 	//torbellino
-	//torbellino = new Torbellino({ 0.0f, 0.0f, 0.0f }, 0.1f, 0.2f, 50.0f);
 	torbellino = new Torbellino(Vector3D(0, 0, 0), 50.0f, 20.0f, 30.0f);
 
 	//Explosion
@@ -234,24 +233,24 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	case ' ':
 	{
-		auto eyePx = GetCamera()->getEye();  // PxVec3
-		auto dirPx = GetCamera()->getDir();  // PxVec3
+		auto eyePx = GetCamera()->getEye();
+		auto dirPx = GetCamera()->getDir();
 
 		Vector3D eye(eyePx.x, eyePx.y, eyePx.z);
 		Vector3D dir(dirPx.x, dirPx.y, dirPx.z);
 
-		//pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f));
-		pistolas.push_back(new Proyectil(eye, dir, 20.0f, 15.0f, 0.65f));
+		//pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f));//bala
+		pistolas.push_back(new Proyectil(eye, dir, 20.0f, 15.0f, 0.65f));//bola pesada
 
 		break;
 	}
 	case 'M': {
-		auto eyePx = GetCamera()->getEye();  // PxVec3
-		auto dirPx = GetCamera()->getDir();  // PxVec3
+		auto eyePx = GetCamera()->getEye();
+		auto dirPx = GetCamera()->getDir();
 
 		Vector3D eye(eyePx.x, eyePx.y, eyePx.z);
 		Vector3D dir(dirPx.x, dirPx.y, dirPx.z);
-
+		//se dispara desde la camara hacia donde mira
 		physx::PxBoxGeometry disco(0.3f, 0.05f, 0.3f);
 		pistolas.push_back(new Proyectil(eye, dir, 600.0f, 60.0f, 0.6f, Vector4(1.0f, 0, 0, 1.0f), &disco));
 		break;
@@ -264,7 +263,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			float velocidadParticula = 20.0f;
 			float tasaEmision = 50.0f;
 
-			FuenteAgua* fuenteAgua = new FuenteAgua(posicionFuente, direccionFuente, velocidadParticula, tasaEmision);
+			FuenteAgua* fuenteAgua = new FuenteAgua(posicionFuente, direccionFuente, velocidadParticula, tasaEmision, 2.0f);
 			sistema->addFuente(fuenteAgua);
 			fuenteAgua->emitir(deltaTime);
 		}
@@ -294,33 +293,16 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	}
 	case 'F': {
 
-		FuenteFuegosArtificiales* fuegos = new FuenteFuegosArtificiales(Vector3D(0, 0, 0), 30.0f, 2.0f);
+		FuenteFuegosArtificiales* fuegos = new FuenteFuegosArtificiales(Vector3D(0, 0, 0), 30.0f, 2.0f, 2.0f);
 		sistema->addFuente(fuegos);
 		fuegos->emitir(deltaTime);
 
 		break;
 	}
 	case 'L': {
-		FuenteFuego* fuego = new FuenteFuego(Vector3D(0.0f, 0.0f, 0.0f), 10.0f, 5.0f, 40.0f);
+		FuenteFuego* fuego = new FuenteFuego(Vector3D(0.0f, 0.0f, 0.0f), 10.0f, 5.0f, 40.0f,2.0f);
 		sistema->addFuente(fuego);
 		fuego->emitir(deltaTime);
-		break;
-	}
-			//quiero que se pueda mover la camara pero que mientras se mueva la pelota la siga
-	case GLUT_KEY_UP: {
-		GetCamera()->moveForward();
-		break;
-	}
-	case GLUT_KEY_DOWN: {
-		GetCamera()->moveBackward();
-		break;
-	}
-	case GLUT_KEY_LEFT: {
-		GetCamera()->strafeLeft();
-		break;
-	}
-	case GLUT_KEY_RIGHT: {
-		GetCamera()->strafeRight();
 		break;
 	}
 	default:

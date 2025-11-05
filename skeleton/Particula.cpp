@@ -2,12 +2,12 @@
 #include <iostream>
 using namespace physx;
 
-physx::PxSphereGeometry Particula::defaultSphere(1.0f);
+physx::PxSphereGeometry Particula::defaultSphere(1.0f);//por si no le meto una forma distinta se hace esfera
 
 Particula::Particula(Vector3D pos, Vector3D vel, Vector3D acc, Vector4 color, physx::PxGeometry* forma, float d, float mass, float g, float vidas): pose(pos.getX(), pos.getY(), pos.getZ()), velocidad(vel),
 ac(acc), damping(d), masa(mass), gravedad(g), vida(vidas), posIni(pos), fuerzaAcumulada(0, 0, 0), color(color), forma(forma)
 {
-	if (forma == nullptr)
+	if (forma == nullptr)//por la forma default
 		this->forma = &defaultSphere;
 	else
 		this->forma = forma;

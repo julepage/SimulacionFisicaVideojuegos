@@ -5,8 +5,8 @@
 class FuenteParticulas
 {
 public:
-	FuenteParticulas(Vector3D posi, Vector3D dire, float velo, float tasa) : pos(posi), vel(velo),
-		tasaEmision(tasa), generador(std::random_device{}()), distUniforme(-2, 2)
+	FuenteParticulas(Vector3D posi, Vector3D dire, float velo, float tasa, float dist) : pos(posi), vel(velo),
+		tasaEmision(tasa), generador(std::random_device{}()), distUniforme(-dist, dist)
 	{
 		dir = dire.normalize();
 	};
@@ -17,7 +17,7 @@ public:
 	};
 
 	virtual void emitir(float t) = 0;//crear particulas
-	virtual void actualizar(float t);//mueve, elimina... particulas
+	virtual void actualizar(float t);//mueve part
 
 	//getter
 	std::vector<Particula*>& getParticulas() { return particulas; }
@@ -27,10 +27,10 @@ protected:
 	Vector3D pos;//de donde sale
 	Vector3D dir;//hacia donde sale
 	float vel;//velocidad con la que sale
-	float tasaEmision;//cuantas part se emiten por frame
+	float tasaEmision;//par emitidas por frame
 	std::vector<Particula*> particulas;
 
-	//distrib uniforme desde -x hasta x de numeros aleatorios
+	//distrib uniforme desde -x hasta x 
 	std::mt19937 generador;//usa semilla aleatoria
 	std::uniform_real_distribution<double> distUniforme;//cojo los aleat del generador y los pongo en rango deseado
 

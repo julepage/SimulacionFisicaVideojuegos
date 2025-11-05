@@ -24,7 +24,7 @@ public:
                 Vector3D diferencia = p->getPos() - p->getPosIni();
                 float distancia = diferencia.modulo();//ya es como valor absoluto, es el modulo de la distancia
 
-                if (p->getVidas() <= 0.0f || distancia > RADIO_MAX) {
+                if (p->getVidas() <= 0.0f || distancia > radioMax) {
                     delete p;
                     it = particulas.erase(it);//actualizo puntero it
                 }
@@ -58,6 +58,6 @@ public:
 private:
     std::vector<FuenteParticulas*> fuentes;
     //distancia maxima que se pueden alejar sin ser eliminadas
-    const float RADIO_MAX = 200.0f;
+    const float radioMax = 200.0f;
 };
 

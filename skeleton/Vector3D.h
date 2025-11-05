@@ -24,14 +24,14 @@ public:
 
 	//operadores
 	//suma
-	Vector3D operator+(const Vector3D a) {
+	Vector3D operator+(const Vector3D a) const{
 		return { x + a.x, y + a.y, z + a.z };
 	}
-	Vector3D operator+(float a) {
+	Vector3D operator+(float a) const{
 		return { x + a, y + a, z + a };
 	}
 	//resta
-	Vector3D operator-(const Vector3D a) {
+	Vector3D operator-(const Vector3D a) const{
 		return { x - a.x, y - a.y, z - a.z };
 	}
 	//mult
