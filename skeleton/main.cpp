@@ -58,6 +58,7 @@ Viento* viento = nullptr;
 Torbellino* torbellino = nullptr;
 Explosion* explosion = nullptr;
 TunelViento* tunelViento = nullptr;
+FuenteAgua* fuenteAgua = nullptr;
 
 
 //creacion de ejes
@@ -263,9 +264,17 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			float velocidadParticula = 20.0f;
 			float tasaEmision = 50.0f;
 
-			FuenteAgua* fuenteAgua = new FuenteAgua(posicionFuente, direccionFuente, velocidadParticula, tasaEmision, 2.0f);
-			sistema->addFuente(fuenteAgua);
-			fuenteAgua->emitir(deltaTime);
+			if (!fuenteAgua) {
+
+				fuenteAgua = new FuenteAgua(posicionFuente, direccionFuente, velocidadParticula, tasaEmision, 2.0f);
+				sistema->addFuente(fuenteAgua);
+				fuenteAgua->emitir(deltaTime);
+			}
+			else
+			{
+				sistema->eliminarFuente(fuenteAgua);
+				fuenteAgua = nullptr;
+			}
 		}
 		//emitir iba aaqui
 
@@ -300,7 +309,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 	case 'L': {
-		FuenteFuego* fuego = new FuenteFuego(Vector3D(0.0f, 0.0f, 0.0f), 10.0f, 5.0f, 40.0f,2.0f);
+		FuenteFuego* fuego = new FuenteFuego(Vector3D(0.0f, 0.0f, 0.0f), 10.0f, 5.0f, 40.0f, 2.0f);
 		sistema->addFuente(fuego);
 		fuego->emitir(deltaTime);
 		break;

@@ -26,7 +26,7 @@ void Particula::integrate(double t)
 	pose.p.y += velocidad.getY() * t;
 	pose.p.z += velocidad.getZ() * t;
 
-	// resetear fuerzas acumuladas para el siguiente paso
+	//reseteo fuerzas acumuladas para el siguiente paso
 	fuerzaAcumulada = Vector3D(0, 0, 0);
 
 }

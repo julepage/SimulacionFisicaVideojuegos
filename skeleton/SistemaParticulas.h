@@ -50,6 +50,14 @@ public:
         fuentes.push_back(fuente);
     }
 
+    void eliminarFuente(FuenteParticulas* fuente)
+    {
+        auto it = std::find(fuentes.begin(), fuentes.end(), fuente);
+        if (it != fuentes.end()) {
+            delete* it;
+            fuentes.erase(it);
+        }
+    }
     //getter
    size_t getNumFuentes() const { return fuentes.size(); }
    const std::vector<FuenteParticulas*>& getFuentes() const { return fuentes; }

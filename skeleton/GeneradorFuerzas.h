@@ -8,7 +8,7 @@ class GeneradorFuerzas
 public:
 	virtual ~GeneradorFuerzas() = default;
 	virtual void updateFuerzas(Particula* p, double t = 0.0) = 0;
-	void toggle() { activa = !activa; }
+	virtual void toggle() { activa = !activa; }
 protected:
 	bool activa = false;//apagada por defecto
 };
