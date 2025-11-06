@@ -115,15 +115,19 @@ void initPhysics(bool interactive)
 
 	//Viento
 	viento = new Viento(200.0f, Vector3D(1, 0, 0), 0.01f);
+	sistema->addFuerza(viento);
 
 	//torbellino
 	torbellino = new Torbellino(Vector3D(0, 0, 0), 50.0f, 20.0f, 30.0f);
+	sistema->addFuerza(torbellino);
 
 	//Explosion
 	explosion = new Explosion(500.0f, 10.0f, Vector3D(2, 5, 0), 5.0f, 20.0f);
+	sistema->addFuerza(explosion);
 
 	//tunel
 	tunelViento = new TunelViento(Vector3D(0, 0, 0), 200.0f, 10.0f);
+	sistema->addFuerza(tunelViento);
 
 }
 
@@ -143,28 +147,7 @@ void stepPhysics(bool interactive, double t)
 	}
 
 	if (sistema) {
-		// Primero actualizamos todas las fuentes
-		if (explosion)
-			explosion->update(deltaTime);
-
 		sistema->actualizar(deltaTime);//emite y actualiza constantemente
-		//aplica fuerzas SOLO si hay partic
-		for (auto fuente : sistema->getFuentes()) {
-
-			auto& particulas = fuente->getParticulas();
-			if (!particulas.empty()) {  // solo entramos si hay partículas
-				for (auto& pa : particulas) {
-					if (torbellino)
-						torbellino->updateFuerzas(pa);
-					if (viento)
-						viento->updateFuerzas(pa);
-					if (explosion)
-						explosion->updateFuerzas(pa, deltaTime);
-					if (tunelViento)
-						tunelViento->updateFuerzas(pa, deltaTime);
-				}
-			}
-		}
 		sistema->mata(deltaTime);
 	}
 
@@ -204,25 +187,7 @@ void cleanupPhysics(bool interactive)
 		delete sistema;
 		sistema = nullptr;
 	}
-	//borrar vientoo
-	if (viento) {
-		delete viento;
-		viento = nullptr;
-	}
-	if (tunelViento) {
-		delete tunelViento;
-		tunelViento = nullptr;
-	}
-	//borrar torbe
-	if (torbellino) {
-		delete torbellino;
-		torbellino = nullptr;
-	}
-	//borrar explos
-	if (explosion) {
-		delete explosion;
-		explosion = nullptr;
-	}
+	
 }
 
 // Function called when a key is pressed
