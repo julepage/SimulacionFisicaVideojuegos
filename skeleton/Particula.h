@@ -37,8 +37,8 @@ public:
 	void setAc(Vector3D Acc) noexcept { ac = Acc; };//da una aceleracion
 	void setHayFuerza(bool f) noexcept { hayFuerza = f; };
 	void addFuerza(const Vector3D& f) { fuerzaAcumulada = fuerzaAcumulada + f; };//añade fuerza luego se suma en integrate
-
-
+	void setPos(Vector3D posi) { pose = { posi.getX(), posi.getY(), posi.getZ() }; };
+	void reset(Vector3D posi) { setPos(posi); velocidad = { 0,0,0 }; ac = { 0,0,0 }; };
 	//CONTROL DE FUERZAS PERMITIDAS!!!
 	bool permiteFuerza(const std::string& tipo) const noexcept {
 		return fuerzasPermitidas.empty() || fuerzasPermitidas.count(tipo) > 0;

@@ -314,6 +314,14 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		fuego->emitir(deltaTime);
 		break;
 	}
+	case 'R': {
+		//esto es para resetear la posicion de mi bola de golf, en principio solo habrá una asi que lo del vector sobra
+		//tambien quiero que si se cae al vacio se reposicione
+		for (auto p : pistolas) {
+			p->reset(p->getPosIni()+Vector3D(-3,-2,-3));
+		}
+		break;
+	}
 	default:
 		break;
 	}
