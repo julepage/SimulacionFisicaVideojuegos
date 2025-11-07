@@ -15,7 +15,10 @@ void FuenteAgua::emitir(float t)
 		velParticula.setY(velParticula.getY() + distUniforme(generador));
 		velParticula.setZ(velParticula.getZ() + distUniforme(generador));
 
-		Particula* p = new Particula(pos, velParticula, Vector3D(0, -10, 0));
+		Vector3D posi = modelo->getPos() + pos;
+		Vector3D veloc = modelo->getVel() + velParticula;
+		
+		Particula* p = new Particula(posi, veloc, modelo->getAc(), modelo->getColor());
 		p->permitirFuerza("tunelViento");
 		p->permitirFuerza("explosion");
 		p->permitirFuerza("torbellino");

@@ -5,8 +5,8 @@
 class FuenteParticulas
 {
 public:
-	FuenteParticulas(Vector3D posi, Vector3D dire, float velo, float tasa, float dist) : pos(posi), vel(velo),
-		tasaEmision(tasa), generador(std::random_device{}()), distUniforme(-dist, dist)
+	FuenteParticulas(Particula* p, Vector3D posi, Vector3D dire, float velo, float tasa, float dist) : pos(posi), vel(velo),
+		tasaEmision(tasa), generador(std::random_device{}()), distUniforme(-dist, dist), modelo(p)
 	{
 		dir = dire.normalize();
 	};
@@ -14,6 +14,7 @@ public:
 	virtual ~FuenteParticulas() {
 		for (auto p : particulas) delete p;
 		particulas.clear();
+		delete modelo;
 	};
 
 	virtual void emitir(float t) = 0;//crear particulas
@@ -29,6 +30,7 @@ protected:
 	float vel;//velocidad con la que sale
 	float tasaEmision;//par emitidas por frame
 	std::vector<Particula*> particulas;
+	Particula* modelo;
 
 	//distrib uniforme desde -x hasta x 
 	std::mt19937 generador;//usa semilla aleatoria

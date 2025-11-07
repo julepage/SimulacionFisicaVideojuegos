@@ -1,13 +1,5 @@
 #include "TunelViento.h"
 
-void TunelViento::toggle()
-{
-	GeneradorFuerzas::toggle();
-	if (activa) {
-		
-	}
-}
-
 void TunelViento::updateFuerzas(Particula* p, double t)
 {
 	if (!activa) return;

@@ -9,8 +9,11 @@ void FuenteFuegosArtificiales::emitir(float t)
 		velP.setX(velP.getX() + distUniforme(generador) * 0.1f);
 		velP.setZ(velP.getZ() + distUniforme(generador) * 0.1f);
 
+		Vector3D posi = modelo->getPos() + pos;
+		Vector3D veloc = modelo->getVel() + velP;
+
 		//crea el cohete qu esubira
-		Particula* p = new Particula(pos, velP, Vector3D(0, -10, 0));
+		Particula* p = new Particula(posi, veloc, modelo->getAc(), modelo->getColor());
 		p->exploto = false;
 		p->permitirFuerza("viento");
 		particulas.push_back(p);
@@ -34,8 +37,11 @@ void FuenteFuegosArtificiales::actualizar(float t)
 				//COLORES ALEATORIOS!!!
 				Vector4 color(distColor(generador), distColor(generador), distColor(generador), 1.0f);
 				
+				Vector3D posi = modelo->getPos() + p->getPos();
+				Vector3D veloc = modelo->getVel() + velSub;
+
 				//salen en la misma pos que la particula de la que salen, con otra vel color...
-				Particula* sub = new Particula(p->getPos(), velSub, Vector3D(0, -10, 0), color, nullptr, 0.98f, 0.5f, 9.8f, 5.0f);
+				Particula* sub = new Particula(posi, veloc, modelo->getAc(), color, nullptr, 0.98f, 0.5f, 9.8f, 5.0f);
 				nuevas.push_back(sub);
 			}
 			delete p;//quiero quitar el cohete

@@ -7,8 +7,6 @@ public:
         : Viento(intensidad, Vector3D(0, 1, 0), 0.0f), // viento vertical hacia arriba
         centro(centro), radio(radio), intensidad(intensidad) {
     }
-    void toggle() override;
-
     void updateFuerzas(Particula* p, double t = 0.0) override;
 private:
     Vector3D centro;

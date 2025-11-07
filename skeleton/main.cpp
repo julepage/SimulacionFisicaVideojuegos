@@ -230,8 +230,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			float tasaEmision = 50.0f;
 
 			if (!fuenteAgua) {
-
-				fuenteAgua = new FuenteAgua(posicionFuente, direccionFuente, velocidadParticula, tasaEmision, 2.0f);
+				Particula* p = new Particula({ 0,0,0 }, { 0,0,0 }, Vector3D(0,-10,0));
+				fuenteAgua = new FuenteAgua(p, posicionFuente, direccionFuente, velocidadParticula, tasaEmision, 2.0f);
 				sistema->addFuente(fuenteAgua);
 				fuenteAgua->emitir(deltaTime);
 			}
@@ -266,15 +266,18 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 	case 'F': {
+		Particula* p = new Particula({ 0,0,0 }, { 0,0,0 }, Vector3D(0, -10, 0), Vector4(1.0f,0.4f,0.4f,1.0f));
 
-		FuenteFuegosArtificiales* fuegos = new FuenteFuegosArtificiales(Vector3D(0, 0, 0), 30.0f, 2.0f, 2.0f);
+		FuenteFuegosArtificiales* fuegos = new FuenteFuegosArtificiales(p, Vector3D(0, 0, 0), 30.0f, 2.0f, 2.0f);
 		sistema->addFuente(fuegos);
 		fuegos->emitir(deltaTime);
 
 		break;
 	}
 	case 'L': {
-		FuenteFuego* fuego = new FuenteFuego(Vector3D(0.0f, 0.0f, 0.0f), 10.0f, 5.0f, 40.0f, 2.0f);
+		Particula* p = new Particula({ 0,0,0 }, { 0,0,0 }, Vector3D(0, -9.8f, 0));
+
+		FuenteFuego* fuego = new FuenteFuego(p, Vector3D(0.0f, 0.0f, 0.0f), 10.0f, 5.0f, 40.0f, 2.0f);
 		sistema->addFuente(fuego);
 		fuego->emitir(deltaTime);
 		break;

@@ -11,7 +11,7 @@ public:
 	static physx::PxSphereGeometry defaultSphere;//geometría base
 	//enum class TipoProyectil { ESFERA, CAJA, CAPSULA };//otra opcion chula pero d emomento nose si me encanta
 
-	Particula(Vector3D pos, Vector3D vel, Vector3D acc, Vector4 color = Vector4(1.0f, 1.0f, 0.0f, 1.0f), physx::PxGeometry* forma = nullptr, float d = 1.0, float masa = 1.0, float g = 9.8, float vidas = 6.0f);
+	Particula(Vector3D pos, Vector3D vel, Vector3D acc, Vector4 color = Vector4(0.0f, 0.4f, 1.0f, 1.0f), physx::PxGeometry* forma = nullptr, float d = 1.0, float masa = 1.0, float g = 9.8, float vidas = 6.0f);
 	virtual ~Particula() { DeregisterRenderItem(renderItem); renderItem = nullptr; };
 
 	//constructora para fuegos artificiales
@@ -24,13 +24,14 @@ public:
 
 	virtual void integrate(double t);
 
-	Vector3D getVel() { return velocidad; };
-	Vector3D getPos() { return Vector3D(pose.p.x, pose.p.y, pose.p.z); };
 	//getter
+	Vector3D getVel() { return velocidad; };
 	float getVidas() const noexcept { return vida; } ;
 	float getMasa() const noexcept { return masa; };
 	Vector3D getPosIni() const noexcept { return posIni; };
 	Vector3D getPos()  const noexcept { return { pose.p.x, pose.p.y, pose.p.z }; };
+	Vector3D getAc()  const noexcept { return ac; };
+	Vector4 getColor()  const noexcept { return color; };
 	bool getHayFuerza() const noexcept { return hayFuerza; };
 	//setter
 	void setVidas(float v) noexcept { vida = v; };
@@ -38,6 +39,8 @@ public:
 	void setHayFuerza(bool f) noexcept { hayFuerza = f; };
 	void addFuerza(const Vector3D& f) { fuerzaAcumulada = fuerzaAcumulada + f; };//añade fuerza luego se suma en integrate
 	void setPos(Vector3D posi) { pose = { posi.getX(), posi.getY(), posi.getZ() }; };
+	void setColor(Vector4 c) { color = c; };
+	void setVel(Vector3D v) { velocidad = v; };
 	void reset(Vector3D posi) { setPos(posi); velocidad = { 0,0,0 }; ac = { 0,0,0 }; };
 	//CONTROL DE FUERZAS PERMITIDAS!!!
 	bool permiteFuerza(const std::string& tipo) const noexcept {

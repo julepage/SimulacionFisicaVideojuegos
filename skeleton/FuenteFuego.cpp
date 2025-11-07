@@ -23,8 +23,12 @@ void FuenteFuego::emitir(float t)
 		else if (tono < 0.8f) color = Vector4(0.9f, 0.45f, 0.1f, 1.0f);//naranja
 		else color = Vector4(0.95f, 0.7f, 0.3f, 1.0f);//amarillo
 
+		//lo calculo según los datos de mi particula modelo
+		Vector3D posi = modelo->getPos() + posLinea;
+		Vector3D veloc = modelo->getVel() + velParticula;
+
 		//creo las particulas
-		Particula* p = new Particula(posLinea, velParticula, Vector3D(0, -9.8f, 0), color, nullptr, 0.95f, 0.5f, 9.8f, 2.0f);
+		Particula* p = new Particula(posi, veloc, modelo->getAc(), color, nullptr, 0.95f, 0.5f, 9.8f, 2.0f);
 
 		p->setHayFuerza(false);//no le afecta ninguna fuerza
 		particulas.push_back(p);
