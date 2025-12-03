@@ -20,6 +20,7 @@
 #include "FuenteFuegosArtificiales.h"
 #include "FuenteFuego.h"
 #include "Muelle.h"
+#include "Flotacion.h"
 
 #include <iostream>
 
@@ -61,6 +62,7 @@ Explosion* explosion = nullptr;
 TunelViento* tunelViento = nullptr;
 FuenteAgua* fuenteAgua = nullptr;
 Muelle* muelle = nullptr;
+Flotacion* flotacion = nullptr;
 
 
 //creacion de ejes
@@ -141,6 +143,20 @@ void initPhysics(bool interactive)
 	float restLength = (f2->getPos() - f1->getPos()).modulo();//union falsa entre las dos
 	muelle = new Muelle( { 0,1,0 }, 10, restLength);
 	sistema->addFuerza(muelle);
+
+	//flotacion
+	float half = 1.0f;
+	float alturaCubo = 2.0f;//altura real
+	float volumenCubo = 1.0f;//2x2x2
+	float masa = 5.0f;
+	Particula* cuboAgua = new Particula(Vector3D(0, 0, 0), Vector3D(0, 0, 0), Vector3D(0, -10, 0), Vector4(0, 1.0, 0, 1)
+	,new physx::PxBoxGeometry(half, half, half), 1.0f, masa);
+	cuboAgua->permitirFuerza("flotacion");
+	sistema->addParticula(cuboAgua);
+
+	flotacion = new Flotacion(Vector3D(0, 0, 0), alturaCubo, volumenCubo, 10.0f);
+	sistema->addFuerza(flotacion);
+
 }
 
 
@@ -278,6 +294,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'P': {
 		if (muelle)
 			muelle->toggle();
+		break;
+	}
+	case 'I': {
+		if (flotacion)
+			flotacion->toggle();
 		break;
 	}
 	case 'F': {
