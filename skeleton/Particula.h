@@ -37,11 +37,13 @@ public:
 	void setVidas(float v) noexcept { vida = v; };
 	void setAc(Vector3D Acc) noexcept { ac = Acc; };//da una aceleracion
 	void setHayFuerza(bool f) noexcept { hayFuerza = f; };
-	void addFuerza(const Vector3D& f) { fuerzaAcumulada = fuerzaAcumulada + f; };//añade fuerza luego se suma en integrate
 	void setPos(Vector3D posi) { pose = { posi.getX(), posi.getY(), posi.getZ() }; };
 	void setColor(Vector4 c) { color = c; };
 	void setVel(Vector3D v) { velocidad = v; };
+
+	void addFuerza(const Vector3D& f) { fuerzaAcumulada = fuerzaAcumulada + f; };//añade fuerza luego se suma en integrate
 	void reset(Vector3D posi) { setPos(posi); velocidad = { 0,0,0 }; ac = { 0,0,0 }; };
+
 	//CONTROL DE FUERZAS PERMITIDAS!!!
 	bool permiteFuerza(const std::string& tipo) const noexcept {
 		return fuerzasPermitidas.empty() || fuerzasPermitidas.count(tipo) > 0;
@@ -73,6 +75,6 @@ protected:
 	Vector4 color;
 	bool hayFuerza = true;//directamente desactiva todas las fierzas sobre la particula
 
-	std::unordered_set<std::string> fuerzasPermitidas;//permite q le afecten ciertas fuerzas
+	std::unordered_set<std::string> fuerzasPermitidas;//permite que le afecten ciertas fuerzas
 };
 

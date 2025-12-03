@@ -19,6 +19,7 @@
 #include "TunelViento.h"
 #include "FuenteFuegosArtificiales.h"
 #include "FuenteFuego.h"
+#include "Muelle.h"
 
 #include <iostream>
 
@@ -59,6 +60,7 @@ Torbellino* torbellino = nullptr;
 Explosion* explosion = nullptr;
 TunelViento* tunelViento = nullptr;
 FuenteAgua* fuenteAgua = nullptr;
+Muelle* muelle = nullptr;
 
 
 //creacion de ejes
@@ -129,6 +131,16 @@ void initPhysics(bool interactive)
 	tunelViento = new TunelViento(Vector3D(0, 0, 0), 200.0f, 10.0f);
 	sistema->addFuerza(tunelViento);
 
+	//muelle
+	Particula* f1 = new Particula(Vector3D(0, 0, 0), Vector3D(0, 1, 0), Vector3D(0, -10, 0));//se borran al destruir el sistema
+	sistema->addParticula(f1);
+	f1->permitirFuerza("muelle");
+	Particula* f2 = new Particula(Vector3D(0, 0, 0), Vector3D(0, 15, 0), Vector3D(0, -10, 0), Vector4(1.0,0,0,1));
+	f2->permitirFuerza("muelle");
+	sistema->addParticula(f2);
+	float restLength = (f2->getPos() - f1->getPos()).modulo();//union falsa entre las dos
+	muelle = new Muelle( { 0,1,0 }, 10, restLength);
+	sistema->addFuerza(muelle);
 }
 
 
@@ -241,8 +253,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 				fuenteAgua = nullptr;
 			}
 		}
-		//emitir iba aaqui
-
 		break;
 	}
 	case 'E': {
@@ -263,6 +273,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'H': {
 		if (torbellino)
 			torbellino->toggle();
+		break;
+	}
+	case 'P': {
+		if (muelle)
+			muelle->toggle();
 		break;
 	}
 	case 'F': {

@@ -255,11 +255,13 @@
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="Flotacion.cpp" />
     <ClCompile Include="FuenteAgua.cpp" />
     <ClCompile Include="FuenteFuego.cpp" />
     <ClCompile Include="FuenteFuegosArtificiales.cpp" />
     <ClCompile Include="FuenteParticulas.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Muelle.cpp" />
     <ClCompile Include="Particula.cpp" />
     <ClCompile Include="Proyectil.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
@@ -275,11 +277,13 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="Flotacion.h" />
     <ClInclude Include="FuenteAgua.h" />
     <ClInclude Include="FuenteFuego.h" />
     <ClInclude Include="FuenteFuegosArtificiales.h" />
     <ClInclude Include="FuenteParticulas.h" />
     <ClInclude Include="GeneradorFuerzas.h" />
+    <ClInclude Include="Muelle.h" />
     <ClInclude Include="Particula.h" />
     <ClInclude Include="Proyectil.h" />
     <ClInclude Include="RenderUtils.hpp" />

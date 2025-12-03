@@ -14,6 +14,9 @@ public:
 		for (auto f : fuerzas)
 			delete f;
 		fuerzas.clear();
+		for (auto p : particulas)
+			delete p;
+		particulas.clear();
 	}
 
 	void mata(double t) {
@@ -53,9 +56,16 @@ public:
 
 				for (auto f : fuerzas)
 				{
-					f->updateFuerzas(p,t);
+					f->updateFuerzas(p, t);
 				}
 			}
+		}
+
+		//particulas
+		for (auto p : particulas) {
+			p->integrate(t);//no actualiza sus vidas, no me interesa que se borren de momento
+			for (auto f : fuerzas)
+				f->updateFuerzas(p, t);
 		}
 
 	}
@@ -65,12 +75,24 @@ public:
 		fuentes.push_back(fuente);
 	}
 
+	void addParticula(Particula* p) {
+		particulas.push_back(p);
+	}
+
 	void eliminarFuente(FuenteParticulas* fuente)
 	{
 		auto it = std::find(fuentes.begin(), fuentes.end(), fuente);
 		if (it != fuentes.end()) {
 			delete* it;
 			fuentes.erase(it);
+		}
+	}
+
+	void eliminaParticula(Particula* p) {
+		auto it = std::find(particulas.begin(), particulas.end(), p);
+		if (it != particulas.end()) {
+			delete* it;
+			particulas.erase(it);
 		}
 	}
 
@@ -85,6 +107,7 @@ public:
 
 private:
 	std::vector<FuenteParticulas*> fuentes;
+	std::vector<Particula*> particulas;
 	std::vector<GeneradorFuerzas*> fuerzas;
 	//distancia maxima que se pueden alejar sin ser eliminadas
 	const float radioMax = 200.0f;

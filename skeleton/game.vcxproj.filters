@@ -22,6 +22,8 @@
     <ClCompile Include="TunelViento.cpp" />
     <ClCompile Include="FuenteFuegosArtificiales.cpp" />
     <ClCompile Include="FuenteFuego.cpp" />
+    <ClCompile Include="Muelle.cpp" />
+    <ClCompile Include="Flotacion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -46,6 +48,8 @@
     <ClInclude Include="TunelViento.h" />
     <ClInclude Include="FuenteFuegosArtificiales.h" />
     <ClInclude Include="FuenteFuego.h" />
+    <ClInclude Include="Muelle.h" />
+    <ClInclude Include="Flotacion.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
