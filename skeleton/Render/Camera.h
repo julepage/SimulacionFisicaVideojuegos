@@ -54,6 +54,8 @@ public:
 	void moveBackward(float dt = 1.0f);
 	void strafeLeft(float dt = 1.0f);
 	void strafeRight(float dt = 1.0f);
+	bool getPickRay(int mouseX, int mouseY, physx::PxVec3& origin, physx::PxVec3& direction);
+
 private:
 	physx::PxVec3	mEye;
 	physx::PxVec3	mDir;

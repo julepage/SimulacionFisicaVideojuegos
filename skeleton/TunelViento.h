@@ -1,6 +1,6 @@
 #pragma once
 #include "Viento.h"
-
+#include "Pelota.h"
 class TunelViento : public Viento {
 public:
     TunelViento(Vector3D centro, float intensidad, float radio)
@@ -8,6 +8,7 @@ public:
         centro(centro), radio(radio), intensidad(intensidad) {
     }
     void updateFuerzas(Particula* p, double t = 0.0) override;
+    void updateFuerzas(Pelota* pelota, double t);
 private:
     Vector3D centro;
     float radio;

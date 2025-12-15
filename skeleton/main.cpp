@@ -21,7 +21,11 @@
 #include "FuenteFuego.h"
 #include "Muelle.h"
 #include "Flotacion.h"
-
+#include "Pelota.h"
+#include "globales.h"
+#include "Solido.h"
+#include "SistemaSolidos.h"
+#include "Mapa.h"
 #include <iostream>
 
 std::string display_text = "This is a test";
@@ -63,6 +67,9 @@ TunelViento* tunelViento = nullptr;
 FuenteAgua* fuenteAgua = nullptr;
 Muelle* muelle = nullptr;
 Flotacion* flotacion = nullptr;
+//SOLIDOS
+ Pelota* pelota = nullptr;//borrarlaaaa
+ SistemaSolidos* sistemaSolidos = nullptr;
 
 
 //creacion de ejes
@@ -111,6 +118,21 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 	physx::PxTransform trans(physx::PxVec3(5.0f, 5.0f, 0.0f));
 
+	//suelooo
+	PxMaterial* mat = gPhysics->createMaterial(0.5f, 0.5f, 0.2f); // staticFriction, dynamicFriction, restitution
+	PxRigidStatic* suelo = gPhysics->createRigidStatic(
+		PxTransform(PxVec3(480.0f, 0.0f, 250.0f))
+	);
+	PxShape* shapeSuelo = gPhysics->createShape(
+		PxBoxGeometry(500.0f, 1.0f, 500.0f), *mat
+	);
+	suelo->attachShape(*shapeSuelo);
+	gScene->addActor(*suelo);
+
+	// Render, CUIDADO BORRAR!!!
+	new RenderItem(shapeSuelo, suelo, PxVec4(0.0f, 0.3f, 1.0f, 1.0f));
+
+
 	//ejes
 	creacionEjes();
 
@@ -130,33 +152,60 @@ void initPhysics(bool interactive)
 	sistema->addFuerza(explosion);
 
 	//tunel
-	tunelViento = new TunelViento(Vector3D(0, 0, 0), 200.0f, 10.0f);
+	tunelViento = new TunelViento(Vector3D(20, 0, 20), 300.0f, 15.0f);
 	sistema->addFuerza(tunelViento);
 
 	//muelle
-	Particula* f1 = new Particula(Vector3D(0, 0, 0), Vector3D(0, 1, 0), Vector3D(0, -10, 0));//se borran al destruir el sistema
-	sistema->addParticula(f1);
-	f1->permitirFuerza("muelle");
-	Particula* f2 = new Particula(Vector3D(0, 0, 0), Vector3D(0, 15, 0), Vector3D(0, -10, 0), Vector4(1.0,0,0,1));
-	f2->permitirFuerza("muelle");
-	sistema->addParticula(f2);
-	float restLength = (f2->getPos() - f1->getPos()).modulo();//union falsa entre las dos
-	muelle = new Muelle( { 0,1,0 }, 10, restLength);
-	sistema->addFuerza(muelle);
+	//Particula* f1 = new Particula(Vector3D(0, 0, 0), Vector3D(0, 1, 0), Vector3D(0, -10, 0));//se borran al destruir el sistema
+	//sistema->addParticula(f1);
+	//f1->permitirFuerza("muelle");
+	//Particula* f2 = new Particula(Vector3D(0, 0, 0), Vector3D(0, 15, 0), Vector3D(0, -10, 0), Vector4(1.0,0,0,1));
+	//f2->permitirFuerza("muelle");
+	//sistema->addParticula(f2);
+	//float restLength = (f2->getPos() - f1->getPos()).modulo();//union falsa entre las dos
+	//muelle = new Muelle( { 0,1,0 }, 10, restLength);
+	//sistema->addFuerza(muelle);
 
-	//flotacion
-	float half = 1.0f;
-	float alturaCubo = 2.0f;//altura real
-	float volumenCubo = 1.0f;//2x2x2
-	float masa = 5.0f;
-	Particula* cuboAgua = new Particula(Vector3D(0, 0, 0), Vector3D(0, 0, 0), Vector3D(0, -10, 0), Vector4(0, 1.0, 0, 1)
-	,new physx::PxBoxGeometry(half, half, half), 1.0f, masa);
-	cuboAgua->permitirFuerza("flotacion");
-	sistema->addParticula(cuboAgua);
+	////flotacion
+	//float half = 1.0f;
+	//float alturaCubo = 2.0f;//altura real
+	//float volumenCubo = 1.0f;//2x2x2
+	//float masa = 5.0f;
+	//Particula* cuboAgua = new Particula(Vector3D(0, 0, 0), Vector3D(0, 0, 0), Vector3D(0, -10, 0), Vector4(0, 1.0, 0, 1)
+	//,new physx::PxBoxGeometry(half, half, half), 1.0f, masa);
+	//cuboAgua->permitirFuerza("flotacion");
+	//sistema->addParticula(cuboAgua);
 
-	flotacion = new Flotacion(Vector3D(0, 0, 0), alturaCubo, volumenCubo, 10.0f);
-	sistema->addFuerza(flotacion);
+	//flotacion = new Flotacion(Vector3D(0, 0, 0), alturaCubo, volumenCubo, 10.0f);
+	//sistema->addFuerza(flotacion);
 
+
+	sistemaSolidos = new SistemaSolidos();
+	//Pelotaa
+	pelota = new Pelota(
+		gPhysics,
+		gScene,
+		gMaterial,
+		Vector3D(30, 5, 30),    // posición inicial
+		2.0f,                 // radio
+		Vector4(1.0f, 0.0f, 0.0f, 1.0f)   // color celeste
+	);
+	// Tamaño del cubo (2x2x2)
+	Vector3D tam(2.0f, 2.0f, 2.0f);
+
+	// Posición del cubo
+	Vector3D pos(0.0f, 02.0f, 0.0f);
+
+	// Color del render (RGBA)
+	PxVec4 color(1.0f, 0.5f, 0.5f, 1.0f);
+
+	// Crear cubo estático
+	Solido* cubillo = new Solido(gPhysics, gScene, mat, pos, tam, color, Solido::Tipo::Estatico);
+	sistemaSolidos->addSolido(cubillo);
+
+	
+	Mapa* mapa = new Mapa("C:/Users/Portatil/Documents/GitHub/SimulacionFisicaVideojuegos/mapa.txt"
+		, sistemaSolidos, gPhysics, gScene, gMaterial);
 }
 
 
@@ -177,6 +226,11 @@ void stepPhysics(bool interactive, double t)
 	if (sistema) {
 		sistema->actualizar(deltaTime);//emite y actualiza constantemente
 		sistema->mata(deltaTime);
+	}
+	if(sistemaSolidos) sistemaSolidos->actualizar(deltaTime);
+	if (pelota) {
+		pelota->update(t);
+		if (tunelViento) tunelViento->updateFuerzas(pelota, t);
 	}
 
 	gScene->fetchResults(true);
@@ -252,7 +306,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'B': {
 
 		if (sistema) {
-			Vector3D posicionFuente(0.0f, 0.0f, 0.0f);
+			Vector3D posicionFuente(20.0f, 0.0f, 20.0f);
 			Vector3D direccionFuente(0.0f, 1.0f, 0.0f);
 			float velocidadParticula = 20.0f;
 			float tasaEmision = 50.0f;
@@ -321,9 +375,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'R': {
 		//esto es para resetear la posicion de mi bola de golf, en principio solo habrá una asi que lo del vector sobra
 		//tambien quiero que si se cae al vacio se reposicione
-		for (auto p : pistolas) {
+		/*for (auto p : pistolas) {
 			p->reset(p->getPosIni()+Vector3D(-3,-2,-3));
-		}
+		}*/
+		pelota->reset();
 		break;
 	}
 	default:

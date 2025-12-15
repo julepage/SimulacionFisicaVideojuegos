@@ -52,5 +52,14 @@ public:
 		z = a.z;
 	}
 
+	Vector3D cross(const Vector3D& a) const {
+		return Vector3D(
+			y * a.z - z * a.y,
+			z * a.x - x * a.z,
+			x * a.y - y * a.x
+		);
+	}
+
+
 };
 

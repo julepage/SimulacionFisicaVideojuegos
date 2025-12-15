@@ -57,6 +57,7 @@ public:
 				for (auto f : fuerzas)
 				{
 					f->updateFuerzas(p, t);
+					
 				}
 			}
 		}

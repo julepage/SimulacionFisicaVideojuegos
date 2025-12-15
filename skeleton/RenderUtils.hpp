@@ -3,7 +3,9 @@
 
 #include "PxPhysicsAPI.h"
 #include "core.hpp"
+#include "Vector3D.h"   
 
+void drawLine(const Vector3D& start, const Vector3D& end);
 class RenderItem;
 void RegisterRenderItem(const RenderItem* _item);
 void DeregisterRenderItem(const RenderItem* _item);
@@ -11,6 +13,7 @@ void DeregisterRenderItem(const RenderItem* _item);
 class RenderItem
 {
 public:
+
 	RenderItem(physx::PxShape* _shape, const physx::PxTransform* _trans, const Vector4& _color) :
 		shape(_shape), transform(_trans), actor(NULL), color(_color), references(1)
 	{

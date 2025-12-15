@@ -32,6 +32,9 @@
 #include "Camera.h"
 #include <ctype.h>
 #include "foundation/PxMat33.h"
+#include <windows.h>        // Necesario en Visual Studio para usar OpenGL
+#include <GL/gl.h>          // glGetIntegerv, glGetDoublev
+#include <GL/glu.h> 
 
 using namespace physx;
 
@@ -62,11 +65,11 @@ namespace Snippets
 		PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
 		switch (toupper(key))
 		{
-		case 'W':	mEye += mDir * 2.0f * speed;		break;
-		case 'S':	mEye -= mDir * 2.0f * speed;		break;
-		case 'A':	mEye -= viewY * 2.0f * speed;		break;
-		case 'D':	mEye += viewY * 2.0f * speed;		break;
-		default:							return false;
+		case 'W':    mEye += mDir * 2.0f * speed;        break;
+		case 'S':    mEye -= mDir * 2.0f * speed;        break;
+		case 'A':    mEye -= viewY * 2.0f * speed;        break;
+		case 'D':    mEye += viewY * 2.0f * speed;        break;
+		default:                            return false;
 		}
 		return true;
 	}
@@ -117,6 +120,34 @@ namespace Snippets
 		return mDir;
 	}
 
-	
+	bool Camera::getPickRay(int mouseX, int mouseY, PxVec3& origin, PxVec3& direction)
+	{
+		int viewport[4];
+		glGetIntegerv(GL_VIEWPORT, viewport);
+
+		double projection[16];
+		glGetDoublev(GL_PROJECTION_MATRIX, projection);
+
+		double modelview[16];
+		glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+
+		double x = mouseX;
+		double y = viewport[3] - mouseY;
+
+		double ox, oy, oz;
+		double tx, ty, tz;
+
+		// Punto en el near plane
+		gluUnProject(x, y, 0.0, modelview, projection, viewport, &ox, &oy, &oz);
+
+		// Punto en el far plane
+		gluUnProject(x, y, 1.0, modelview, projection, viewport, &tx, &ty, &tz);
+
+		origin = PxVec3(ox, oy, oz);
+		direction = PxVec3(tx - ox, ty - oy, tz - oz).getNormalized();
+
+		return true;
+	}
+
 }
 

@@ -1,0 +1,7 @@
+16 6
+xxxxxxx
+xsssssxxxxxxxxxx
+xsssssxsssssssmx
+xsssssxssssssssx
+xssssssssssssssx
+xxxxxxxxxxxxxxxx

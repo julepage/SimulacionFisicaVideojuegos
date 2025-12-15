@@ -230,7 +230,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <ProgramDataBaseFileName>$(TargetDir)\$(TargetName).pdb</ProgramDataBaseFileName>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <AdditionalOptions>/INCREMENTAL:NO /LIBPATH:../../../Lib/vc14win64 PhysX3Common_x64.lib PhysX3_x64.lib PhysX3Cooking_x64.lib PhysX3CharacterKinematic_x64.lib PhysX3Extensions.lib PxTask_x64.lib PxFoundation_x64.lib PsFastXml_x64.lib PxPvdSDK_x64.lib /LIBPATH:../../lib/vc14win64 Utils.lib</AdditionalOptions>
@@ -254,6 +254,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="Disparo.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Flotacion.cpp" />
     <ClCompile Include="FuenteAgua.cpp" />
@@ -261,13 +262,17 @@
     <ClCompile Include="FuenteFuegosArtificiales.cpp" />
     <ClCompile Include="FuenteParticulas.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mapa.cpp" />
     <ClCompile Include="Muelle.cpp" />
     <ClCompile Include="Particula.cpp" />
+    <ClCompile Include="Pelota.cpp" />
     <ClCompile Include="Proyectil.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="SistemaParticulas.cpp" />
+    <ClCompile Include="SistemaSolidos.cpp" />
+    <ClCompile Include="Solido.cpp" />
     <ClCompile Include="Torbellino.cpp" />
     <ClCompile Include="TunelViento.cpp" />
     <ClCompile Include="Vector3D.cpp" />
@@ -276,6 +281,7 @@
   <ItemGroup>
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="Disparo.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Flotacion.h" />
     <ClInclude Include="FuenteAgua.h" />
@@ -283,13 +289,18 @@
     <ClInclude Include="FuenteFuegosArtificiales.h" />
     <ClInclude Include="FuenteParticulas.h" />
     <ClInclude Include="GeneradorFuerzas.h" />
+    <ClInclude Include="globales.h" />
+    <ClInclude Include="Mapa.h" />
     <ClInclude Include="Muelle.h" />
     <ClInclude Include="Particula.h" />
+    <ClInclude Include="Pelota.h" />
     <ClInclude Include="Proyectil.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="SistemaParticulas.h" />
+    <ClInclude Include="SistemaSolidos.h" />
+    <ClInclude Include="Solido.h" />
     <ClInclude Include="Torbellino.h" />
     <ClInclude Include="TunelViento.h" />
     <ClInclude Include="Vector3D.h" />
