@@ -16,7 +16,7 @@ public:
 
     // Arrastre
     void comenzarArrastre();
-    void actualizarArrastre(int mouseX, int mouseY); // ya no mueve la pelota
+    void actualizarArrastre(int mouseX, int mouseY); //ya no mueve la pelota
     void soltarArrastre();
     Vector3D screenToWorld(int x, int y);
     bool raycast(const PxVec3& origen, const PxVec3& direccion, PxRaycastBuffer& hit);
@@ -36,7 +36,7 @@ public:
     Vector3D getpuntoA() { return puntoActual; }
     bool estaParada(float umbral = 4.0f) const;
 
-    void update(float deltaTime) override;
+   
 
     // Setters
     void setArrastrando(bool s) { arrastrando = s; }

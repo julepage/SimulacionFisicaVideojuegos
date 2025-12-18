@@ -145,24 +145,8 @@ void initPhysics(bool interactive)
 	physx::PxTransform trans(physx::PxVec3(5.0f, 5.0f, 0.0f));
 	PxMaterial* mat = gPhysics->createMaterial(0.5f, 0.5f, 0.2f); // staticFriction, dynamicFriction, restitution
 
-
-
-	//ballena
-	//PxRigidStatic* ballena = gPhysics->createRigidStatic(
-	//	PxTransform(PxVec3(80.0f, -10.0f, 260.0f))
-	//);
-	//PxShape* shapeB = gPhysics->createShape(
-	//	PxBoxGeometry(15.0f, 15.0f, 40.0f), *mat
-	//);
-	//ballena->attachShape(*shapeB);
-	//gScene->addActor(*ballena);
-
-	//// Render, CUIDADO BORRAR!!!
-	//new RenderItem(shapeB, ballena, PxVec4(0.0f, 0.0f, 0.0f, 1.0f));
-
-
 	//ejes
-	creacionEjes();
+	//creacionEjes();
 
 	//sistema
 	sistema = new SistemaParticulas();
@@ -237,47 +221,25 @@ void initPhysics(bool interactive)
 
 	sistemaSolidos = new SistemaSolidos();
 
+	//suelo
 	Vector3D tamSuelo(1000.0f, 5.0f, 1000.0f);
-	// Posición del suelo (centro)
 	Vector3D posSuelo(250.0f, -5.0f, 250.0f);
-	// Color
 	PxVec4 colorSuelo(0.0f, 0.3f, 1.0f, 1.0f);
-
-	// Crear sólido usando tu clase
-	suelo = new Solido(
-		gPhysics,
-		gScene,
-		gMaterial,
-		posSuelo,
-		tamSuelo,
-		colorSuelo,
-		Solido::Tipo::Estatico
-	);
-
-	// Si quieres, puedes guardar un puntero para manipularlo después
-	// o añadirlo a tu sistema de sólidos si tienes uno:
+	suelo = new Solido(gPhysics,gScene,gMaterial,posSuelo,tamSuelo,colorSuelo,Solido::Tipo::Estatico);
 	sistemaSolidos->addSolido(suelo);
 
 	//Pelotaa
-	pelota = new Pelota(
-		gPhysics,
-		gScene,
-		gMaterial,
-		Vector3D(40, 5, 40),    // posición inicial
-		2.0f,                 // radio
-		Vector4(1.0f, 0.0f, 0.0f, 1.0f)   // color celeste
-	);
+	pelota = new Pelota(gPhysics,gScene,gMaterial,Vector3D(40, 5, 40),  2.0f, Vector4(1.0f, 0.0f, 0.0f, 1.0f) );
 	sistemaSolidos->addSolido(pelota);
 
+	//mapa
+	Mapa* mapa = new Mapa("C:/Users/Portatil/Documents/GitHub/SimulacionFisicaVideojuegos/mapa.txt",sistemaSolidos, gPhysics, gScene, gMaterial);
 
-	Mapa* mapa = new Mapa("C:/Users/Portatil/Documents/GitHub/SimulacionFisicaVideojuegos/mapa.txt"
-		, sistemaSolidos, gPhysics, gScene, gMaterial);
-
-	// ----- Crear muelle con puerta -----
-	Vector3D posAncla(450, 30, 40);     // posición del ancla
-	float alturaPuerta = 20.f;              // altura de la puerta
-	float k = 10.f;                         // constante elástica
-	float longitudReposo = 5.f;             // longitud de reposo del muelle
+	//puerta
+	Vector3D posAncla(450, 30, 40);     
+	float alturaPuerta = 20.f;            
+	float k = 10.f;                        
+	float longitudReposo = 5.f;            
 
 	muellePuerta = new Muelle(gPhysics, gScene, gMaterial, posAncla, alturaPuerta, sistemaSolidos);
 }
@@ -381,10 +343,10 @@ void cleanupPhysics(bool interactive)
 	gFoundation->release();
 
 	//borrar ejes
-	DeregisterRenderItem(Xaxis);
+	/*DeregisterRenderItem(Xaxis);
 	DeregisterRenderItem(Yaxis);
 	DeregisterRenderItem(Zaxis);
-	DeregisterRenderItem(center);
+	DeregisterRenderItem(center);*/
 
 	//borrar PARTICULA!!!!
 	for (auto pa : pistolas)
@@ -467,13 +429,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		if (flotacion)
 			flotacion->toggle();
 		break;
-		Particula* p = new Particula({ 0,0,0 }, { 0,0,0 }, Vector3D(0, -10, 0), Vector4(1.0f, 0.4f, 0.4f, 1.0f));
-
-		FuenteFuegosArtificiales* fuegos = new FuenteFuegosArtificiales(p, Vector3D(0, 0, 0), 50.0f, 2.0f, 7.0f);
-		sistema->addFuente(fuegos);
-		fuegos->emitir(deltaTime);
-
-		break;
 	}
 	case 'F': {
 		Particula* p = new Particula({ 0,0,0 }, { 0,0,0 }, Vector3D(0, -10, 0), Vector4(1.0f, 0.4f, 0.4f, 1.0f));
@@ -484,11 +439,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 	case 'R': {
-		//esto es para resetear la posicion de mi bola de golf, en principio solo habrá una asi que lo del vector sobra
-		//tambien quiero que si se cae al vacio se reposicione
-		/*for (auto p : pistolas) {
-			p->reset(p-a>getPosIni()+Vector3D(-3,-2,-3));
-		}*/
 		pelota->reset();
 		GetCamera()->resetCamera();
 		break;

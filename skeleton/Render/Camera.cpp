@@ -160,10 +160,10 @@ namespace Snippets
 		double ox, oy, oz;
 		double tx, ty, tz;
 
-		// Punto en el near plane
+		//near plane
 		gluUnProject(x, y, 0.0, modelview, projection, viewport, &ox, &oy, &oz);
 
-		// Punto en el far plane
+		//far plane
 		gluUnProject(x, y, 1.0, modelview, projection, viewport, &tx, &ty, &tz);
 
 		origin = PxVec3(ox, oy, oz);
@@ -179,25 +179,24 @@ namespace Snippets
 
 		Vector3D posPelota = pelota->getPos();
 
-		float alturaExtra = 15.0f;//altura sobre la pelota
-		float distancia = 40.0f;//distancia detrás (en XZ)
-		float distanciaMin = 20.0f;//distancia mínima
+		float alturaExtra = 15.0f;
+		float distancia = 40.0f;//xz
+		float distanciaMin = 20.0f;
 
-		// Vector desde cámara hacia pelota en XZ
+		//camara a pelota vec
 		Vector3D camToPelotaXZ = Vector3D(posPelota.getX() - mEye.x, 0, posPelota.getZ() - mEye.z);
 		if (camToPelotaXZ.modulo() < 0.01f)
-			camToPelotaXZ = Vector3D(0, 0, 1); // dirección por defecto si está directamente encima
+			camToPelotaXZ = Vector3D(0, 0, 1);
 		camToPelotaXZ = camToPelotaXZ.normalize();
 
-		// Posición objetivo de la cámara (detrás en XZ y altura relativa)
+		//pos obj camara
 		Vector3D posCamObj = posPelota - camToPelotaXZ * distancia;
 		posCamObj.setY(posPelota.getY() + alturaExtra);
 
-		// Suavizado
 		float factorSuavizado = 0.1f;
 		mEye = mEye + (PxVec3(posCamObj.getX(), posCamObj.getY(), posCamObj.getZ()) - mEye) * factorSuavizado;
 
-		// Limitar distancia mínima
+		//distancia min
 		Vector3D diff = Vector3D(mEye.x, mEye.y, mEye.z) - posPelota;
 		float dist = diff.modulo();
 		if (dist < distanciaMin)
@@ -207,7 +206,7 @@ namespace Snippets
 			mEye = PxVec3(nuevaPos.getX(), nuevaPos.getY(), nuevaPos.getZ());
 		}
 
-		// Mirar siempre hacia la pelota
+		//mirar siempre hacia la pelota
 		Vector3D dirCam = (posPelota - Vector3D(mEye.x, mEye.y, mEye.z)).normalize();
 		mDir = PxVec3(dirCam.getX(), dirCam.getY(), dirCam.getZ());
 		
@@ -215,7 +214,7 @@ namespace Snippets
 
 	void Camera::update(float deltaTime)
 	{
-		seguirPelota();  // ajusta posición y dirección de la cámara
+		seguirPelota();
 	}
 }
 
