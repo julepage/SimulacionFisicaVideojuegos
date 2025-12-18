@@ -18,7 +18,7 @@ void FuenteAgua::emitir(float t)
 		Vector3D posi = modelo->getPos() + pos;
 		Vector3D veloc = modelo->getVel() + velParticula;
 		
-		Particula* p = new Particula(posi, veloc, modelo->getAc(), modelo->getColor());
+		Particula* p = new Particula(posi, veloc, modelo->getAc(), modelo->getColor(), nullptr, 1.0, modelo->getMasa(), 9.8, modelo->getVidas());
 		p->permitirFuerza("tunelViento");
 		p->permitirFuerza("explosion");
 		p->permitirFuerza("torbellino");

@@ -71,7 +71,7 @@ Flotacion* flotacion = nullptr;
 Pelota* pelota = nullptr;//borrarlaaaa
 SistemaSolidos* sistemaSolidos = nullptr;
 Muelle* muellePuerta = nullptr;
-double tiempoMax = 500.0;   // 5 minutos/2
+double tiempoMax = 150.0;   // 5 minutos/2
 double tiempoRestante = tiempoMax;
 std::string display_text = " ";
 Solido* suelo = nullptr;
@@ -173,7 +173,7 @@ void initPhysics(bool interactive)
 	float velocidadParticula = 20.0f;
 	float tasaEmision = 50.0f;
 
-	Particula* p = new Particula({ 0,0,0 }, { 0,0,0 }, Vector3D(0, -10, 0));
+	Particula* p = new Particula({ 0,0,0 }, { 0,0,0 }, Vector3D(0, -10, 0),Vector4(0.0f, 0.4f, 1.0f, 1.0f),nullptr, 2.0, 1.0, 9.8,1.0f);
 	fuenteAgua = new FuenteAgua(p, posicionFuente, direccionFuente, velocidadParticula, tasaEmision, 2.0f);
 	sistema->addFuente(fuenteAgua);
 	fuenteAgua->emitir(deltaTime);
