@@ -1,7 +1,28 @@
-16 6
+0 0 0
 xxxxxxx
-xsssssxxxxxxxxxx
-xsssssxsssssssmx
-xsssssxssssssssx
-xssssssssssssssx
-xxxxxxxxxxxxxxxx
+xsssssxxxx 
+xsssssssss
+xsssssxxxx 
+xxxxxxx	
+20
+xxxxxx
+ssssss
+xxxxxx
+I10
+x
+s
+x
+-0
+      xxxxxxxxxx
+xxxxxxxssssssssx
+sssssssssssssssx
+xxxxxxxssssssssx
+      xxxxxxxxsx	
+           xsssx
+           xsxxx
+           xsssx
+     xxxxxxxxxsx
+     xmssssssssx
+     xxxxxxxxxxx
+
+

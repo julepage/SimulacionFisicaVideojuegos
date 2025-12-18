@@ -10,6 +10,7 @@ public:
 	virtual void updateFuerzas(Particula* p, double t = 0.0) = 0;
 	virtual void toggle() { activa = !activa; }
 	virtual void update(double dt) {} // por defecto no hace nada pero es por si necesito actualizar por frmae y no por particulas como en la explosion
+	virtual void setActiva(bool t) { activa = t; };
 protected:
 	bool activa = false;//apagada por defecto
 };

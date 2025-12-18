@@ -14,7 +14,10 @@ public:
 	virtual ~FuenteParticulas() {
 		for (auto p : particulas) delete p;
 		particulas.clear();
+		if (modelo) {
 		delete modelo;
+		modelo = nullptr;
+		}
 	};
 
 	virtual void emitir(float t) = 0;//crear particulas

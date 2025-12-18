@@ -1,4 +1,5 @@
 #include "FuenteFuego.h"
+#include <iostream>
 
 void FuenteFuego::emitir(float t)
 {
@@ -33,6 +34,7 @@ void FuenteFuego::emitir(float t)
 		p->setHayFuerza(false);//no le afecta ninguna fuerza
 		particulas.push_back(p);
 	}
+
 }
 
 void FuenteFuego::actualizar(float t)
@@ -47,4 +49,38 @@ void FuenteFuego::actualizar(float t)
 			nuevas.push_back(p);
 	}
 	particulas = nuevas;
+}
+
+bool FuenteFuego::colisionConPelota() const
+{
+	//Vector3D p = pelota->getPos();
+	//float rPelota = 1.0f; 
+
+	//float yBase = pos.getY() - rPelota;
+	//float yTope = pos.getY() + alturaFuego + rPelota;
+
+	//if (p.getY() < yBase || p.getY() > yTope)
+	//	return false;
+
+	//Vector3D diff(p.getX() - pos.getX(), 0.0f, p.getZ() - pos.getZ());
+	//return diff.modulo() <= radioFuego + rPelota; //  si la pelota ebtra en el radio del fuego se reposiciona
+
+	Vector3D p = pelota->getPos();
+	float rPelota = 1.0f;
+
+	// altura (Y)
+	float yBase = pos.getY() - rPelota;
+	float yTope = pos.getY() + alturaFuego + rPelota;
+
+	if (p.getY() < yBase || p.getY() > yTope)
+		return false;
+
+	// Diferencias en X y Z
+	float dx = std::abs(p.getX() - pos.getX());
+	float dz = std::abs(p.getZ() - pos.getZ());
+
+	float radioX = radioFuego + rPelota;
+	float radioZ = radioFuego * 0.25f + rPelota; // ? “un cuarto”
+
+	return dx <= radioX && dz <= radioZ;
 }

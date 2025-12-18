@@ -254,7 +254,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
-    <ClCompile Include="Disparo.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Flotacion.cpp" />
     <ClCompile Include="FuenteAgua.cpp" />
@@ -281,7 +280,6 @@
   <ItemGroup>
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
-    <ClInclude Include="Disparo.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Flotacion.h" />
     <ClInclude Include="FuenteAgua.h" />

@@ -2,16 +2,17 @@
 #include "RenderUtils.hpp"
 #include <PxPhysicsAPI.h>
 #include "Vector3D.h"
+#include "Solido.h"
 
 using namespace physx;
 
-class Pelota
+class Pelota : public Solido
 {
 public:
     Pelota(PxPhysics* physics, PxScene* scene, PxMaterial* mat,
         Vector3D posInicial, float radio, Vector4 colorBola);
 
-    ~Pelota();
+    Pelota::~Pelota() = default;
 
     // Arrastre
     void comenzarArrastre();
@@ -21,10 +22,10 @@ public:
     bool raycast(const PxVec3& origen, const PxVec3& direccion, PxRaycastBuffer& hit);
     void Pelota::aplicarFuerza(const Vector3D& fuerza, PxForceMode::Enum modo = PxForceMode::eIMPULSE)
     {
-        if (!cuerpo) return;
-        cuerpo->wakeUp();
+        if (!cuerpoD) return;
+        cuerpoD->wakeUp();
         PxVec3 f(fuerza.getX(), fuerza.getY(), fuerza.getZ());
-        cuerpo->addForce(f, modo);
+        cuerpoD->addForce(f, modo);
     }
 
     // Getters
@@ -33,9 +34,9 @@ public:
     bool estaArrastrando() const { return arrastrando; }
     Vector3D getpuntoI() { return puntoInicio; }
     Vector3D getpuntoA() { return puntoActual; }
-    bool estaParada(float umbral = 1.0f) const;
+    bool estaParada(float umbral = 4.0f) const;
 
-    void update(float deltaTime);
+    void update(float deltaTime) override;
 
     // Setters
     void setArrastrando(bool s) { arrastrando = s; }
@@ -46,7 +47,7 @@ public:
 
 
 protected:
-    PxRigidDynamic* cuerpo = nullptr;
+  //  PxRigidDynamic* cuerpoD = nullptr;
     RenderItem* render = nullptr;
     PxScene* scene;
     Vector3D posI;

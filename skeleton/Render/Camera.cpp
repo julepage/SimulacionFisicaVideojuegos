@@ -34,7 +34,9 @@
 #include "foundation/PxMat33.h"
 #include <windows.h>        // Necesario en Visual Studio para usar OpenGL
 #include <GL/gl.h>          // glGetIntegerv, glGetDoublev
-#include <GL/glu.h> 
+#include <GL/glu.h>
+#include "../globales.h"
+#include <iostream>
 
 using namespace physx;
 
@@ -43,10 +45,28 @@ namespace Snippets
 
 	Camera::Camera(const PxVec3& eye, const PxVec3& dir)
 	{
+		
 		mEye = eye;
+		mEyeIni = eye;
 		mDir = dir.getNormalized();
+		mDirIni = dir.getNormalized();
 		mMouseX = 0;
 		mMouseY = 0;
+		ultimaDireccion = Vector3D(1, 0, 0);
+		setDir(PxVec3(1, 0, 0));
+		
+	}
+	void Camera::resetCamera()
+	{
+		// Posición inicial de la cámara
+		mEye = mEyeIni;  // eye = Vector3D inicial de la cámara
+		mDir = mDirIni; // dir = dirección inicial
+		ultimaDireccion = Vector3D(1, 0, 0); // dirección por defecto
+		mMouseX = 0;
+		mMouseY = 0;
+
+		// Configurar dirección de PhysX o similar
+		setDir(PxVec3(1, 0, 0)); // vector dirección inicial
 	}
 
 	void Camera::handleMouse(int button, int state, int x, int y)
@@ -58,18 +78,21 @@ namespace Snippets
 	}
 
 	bool Camera::handleKey(unsigned char key, int x, int y, float speed)
-	{
-		PX_UNUSED(x);
-		PX_UNUSED(y);
-
-		PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
-		switch (toupper(key))
+	{	
+		if(pelota->estaParada())
 		{
-		case 'W':    mEye += mDir * 2.0f * speed;        break;
-		case 'S':    mEye -= mDir * 2.0f * speed;        break;
-		case 'A':    mEye -= viewY * 2.0f * speed;        break;
-		case 'D':    mEye += viewY * 2.0f * speed;        break;
-		default:                            return false;
+			PX_UNUSED(x);
+			PX_UNUSED(y);
+
+			PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
+			switch (toupper(key))
+			{
+			case 'W':    mEye += mDir * 2.0f * speed;        break;
+			case 'S':    mEye -= mDir * 2.0f * speed;        break;
+			case 'A':    mEye -= viewY * 2.0f * speed;        break;
+			case 'D':    mEye += viewY * 2.0f * speed;        break;
+			default:                            return false;
+			}
 		}
 		return true;
 	}
@@ -149,5 +172,50 @@ namespace Snippets
 		return true;
 	}
 
+	void Camera::seguirPelota()
+	{
+		if (!pelota) return;
+		if (pelota->estaParada()) return;
+
+		Vector3D posPelota = pelota->getPos();
+
+		float alturaExtra = 15.0f;//altura sobre la pelota
+		float distancia = 40.0f;//distancia detrás (en XZ)
+		float distanciaMin = 20.0f;//distancia mínima
+
+		// Vector desde cámara hacia pelota en XZ
+		Vector3D camToPelotaXZ = Vector3D(posPelota.getX() - mEye.x, 0, posPelota.getZ() - mEye.z);
+		if (camToPelotaXZ.modulo() < 0.01f)
+			camToPelotaXZ = Vector3D(0, 0, 1); // dirección por defecto si está directamente encima
+		camToPelotaXZ = camToPelotaXZ.normalize();
+
+		// Posición objetivo de la cámara (detrás en XZ y altura relativa)
+		Vector3D posCamObj = posPelota - camToPelotaXZ * distancia;
+		posCamObj.setY(posPelota.getY() + alturaExtra);
+
+		// Suavizado
+		float factorSuavizado = 0.1f;
+		mEye = mEye + (PxVec3(posCamObj.getX(), posCamObj.getY(), posCamObj.getZ()) - mEye) * factorSuavizado;
+
+		// Limitar distancia mínima
+		Vector3D diff = Vector3D(mEye.x, mEye.y, mEye.z) - posPelota;
+		float dist = diff.modulo();
+		if (dist < distanciaMin)
+		{
+			Vector3D diffNorm = diff.normalize();
+			Vector3D nuevaPos = posPelota + diffNorm * distanciaMin;
+			mEye = PxVec3(nuevaPos.getX(), nuevaPos.getY(), nuevaPos.getZ());
+		}
+
+		// Mirar siempre hacia la pelota
+		Vector3D dirCam = (posPelota - Vector3D(mEye.x, mEye.y, mEye.z)).normalize();
+		mDir = PxVec3(dirCam.getX(), dirCam.getY(), dirCam.getZ());
+		
+	}
+
+	void Camera::update(float deltaTime)
+	{
+		seguirPelota();  // ajusta posición y dirección de la cámara
+	}
 }
 

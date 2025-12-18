@@ -15,39 +15,49 @@ void FuenteFuegosArtificiales::emitir(float t)
 		//crea el cohete qu esubira
 		Particula* p = new Particula(posi, veloc, modelo->getAc(), modelo->getColor());
 		p->exploto = false;
-		p->permitirFuerza("viento");
+		//p->permitirFuerza("viento");
+        p->setHayFuerza(false);
 		particulas.push_back(p);
 	}
 }
 
 void FuenteFuegosArtificiales::actualizar(float t)
 {
-	//particulas que explotan y salne mas:
-	std::vector<Particula*> nuevas;
-	FuenteParticulas::actualizar(t);
-	for (auto p : particulas) {
+    //a estas si les permito todas las fuerzas
+    std::vector<Particula*> nuevas;
+    FuenteParticulas::actualizar(t);
 
-		if (p->getVel().getY() < 0 && !p->exploto) {
-			p->exploto = true;//si la particula cae y aun no ha explotado pues la exploto y la marco
-			//explosion
-			for (int i = 0; i < 10; ++i) {
-				//explota y crea otras particulas las llamo sbparticulas
-				Vector3D velSub(distUniforme(generador), distUniforme(generador) + 0.5, distUniforme(generador));//mas arriba en y
-				velSub = velSub.normalize() * 5.0f;//si explota mas o menos, es su vel
-				//COLORES ALEATORIOS!!!
-				Vector4 color(distColor(generador), distColor(generador), distColor(generador), 1.0f);
-				
-				Vector3D posi = modelo->getPos() + p->getPos();
-				Vector3D veloc = modelo->getVel() + velSub;
+    for (auto p : particulas) {
+        //si está cayendo y no ha explotado pues explota
+        if (p->getVel().getY() < 0 && !p->exploto) {
+            p->exploto = true; //explotada para q no lo haga infiinico
 
-				//salen en la misma pos que la particula de la que salen, con otra vel color...
-				Particula* sub = new Particula(posi, veloc, modelo->getAc(), color, nullptr, 0.98f, 0.5f, 9.8f, 5.0f);
-				nuevas.push_back(sub);
-			}
-			delete p;//quiero quitar el cohete
-		}
-		else nuevas.push_back(p);
-	}
+            const int numSubParticulas = 50;
+            const float velocidadExplosion = 15.0f;
 
-	particulas = nuevas;//reemplazo el vector para incluir las nuevas subpart
+            for (int i = 0; i < numSubParticulas; ++i) {
+                //explosion con vals aleatorios
+                Vector3D velSub( distUniforme(generador) * 2.0f - 1.0f, distUniforme(generador) * 2.0f - 1.0f, distUniforme(generador) * 2.0f - 1.0f);
+                velSub = velSub.normalize() * velocidadExplosion;
+
+                //color aleatorio
+                Vector4 color(distColor(generador), distColor(generador), distColor(generador), 1.0f);
+
+                //pos ini particula
+                Vector3D posi = modelo->getPos() + p->getPos();
+                Vector3D veloc = modelo->getVel() + velSub;
+
+                //creo la subparticula
+                Particula* sub = new Particula(posi, veloc, modelo->getAc(), color,
+                    nullptr, 0.98f, 0.5f, 9.8f, 5.0f);
+                nuevas.push_back(sub);
+            }
+
+            delete p;//elimino la particula original
+        }
+        else {
+            nuevas.push_back(p);
+        }
+    }
+    particulas = nuevas;
 }

@@ -4,28 +4,19 @@
 
 Pelota::Pelota(PxPhysics* physics, PxScene* scene, PxMaterial* mat,
 	Vector3D posInicial, float radio, Vector4 colorBola)
-	: posI(posInicial), color(colorBola), scene(scene)
+	: Solido(physics, scene, mat, posInicial, radio, colorBola, Solido::Tipo::Dinamico, Solido::TipoEspecial::Pelota),
+	posI(posInicial), color(colorBola), scene(scene)
 {
-	cuerpo = physics->createRigidDynamic(PxTransform(posInicial.getX(), posInicial.getY(), posInicial.getZ()));
-	PxShape* shape = physics->createShape(PxSphereGeometry(radio), *mat, true);
-	cuerpo->attachShape(*shape);
-	PxRigidBodyExt::updateMassAndInertia(*cuerpo, 1.0f);
-	scene->addActor(*cuerpo);
-
-	cuerpo->setLinearDamping(0.5f);
-	render = new RenderItem(shape, cuerpo, color);
-	cuerpo->putToSleep();
-}
-
-Pelota::~Pelota()
-{
-	if (render) DeregisterRenderItem(render);
-	if (cuerpo) cuerpo->release();
+	cuerpoD->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_X, false);
+	cuerpoD->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, false);
+	cuerpoD->setLinearDamping(0.01f);
+	//cuerpoD->setLinearDamping(0.5f);
+	cuerpoD->putToSleep();
 }
 
 Vector3D Pelota::getPos() const
 {
-	auto p = cuerpo->getGlobalPose().p;
+	auto p = cuerpoD->getGlobalPose().p;
 	return { p.x, p.y, p.z };
 }
 void Pelota::comenzarArrastre()
@@ -48,14 +39,14 @@ void Pelota::soltarArrastre()
 
 	// Vector de fuerza desde la bola hacia el mouse proyectado
 	Vector3D dir = puntoActual - puntoInicio;
-	float coef = 20.0f; // ajustar fuerza
+	float coef = 60.0f; // ajustar fuerza
 	dir = dir * coef;
 
 	PxVec3 fuerza(dir.getX(), dir.getY(), dir.getZ());
-	cuerpo->wakeUp();
+	cuerpoD->wakeUp();
 	movida = true;
-	cuerpo->setLinearDamping(0.5);
-	cuerpo->addForce(-fuerza, PxForceMode::eIMPULSE);
+	cuerpoD->setLinearDamping(0.5);
+	cuerpoD->addForce(-fuerza, PxForceMode::eIMPULSE);
 }
 
 Vector3D Pelota::screenToWorld(int mouseX, int mouseY)
@@ -100,18 +91,19 @@ Vector3D Pelota::screenToWorld(int mouseX, int mouseY)
 
 void Pelota::reset()
 {
-	if (!cuerpo) return;
+	if (!cuerpoD) return;
 	/*cuerpo->setLinearVelocity(PxVec3(0, 0, 0));
 	cuerpo->setAngularVelocity(PxVec3(0, 0, 0));*/
-	cuerpo->putToSleep();
-	cuerpo->setGlobalPose(PxTransform(posI.getX(), posI.getY(), posI.getZ()));
-	cuerpo->wakeUp();
+	cuerpoD->putToSleep();
+	cuerpoD->setGlobalPose(PxTransform(posI.getX(), posI.getY(), posI.getZ()));
+	cuerpoD->wakeUp();
+	
 }
 
 bool Pelota::raycast(const PxVec3& origen, const PxVec3& direccion, PxRaycastBuffer& hit)
 {
 	// Raycast solo contra la esfera de la pelota
-	PxVec3 pos = cuerpo->getGlobalPose().p;
+	PxVec3 pos = cuerpoD->getGlobalPose().p;
 	float radio = 1.0f; // o el radio que tenga tu pelota
 
 	// Aquí puedes hacer un ray-sphere test sencillo
@@ -124,22 +116,21 @@ bool Pelota::raycast(const PxVec3& origen, const PxVec3& direccion, PxRaycastBuf
 
 bool Pelota::estaParada(float umbral) const
 {
-	if (!cuerpo) return true;
+	if (!cuerpoD) return true;
 
-	PxVec3 vel = cuerpo->getLinearVelocity();
-	PxVec3 angVel = cuerpo->getAngularVelocity();
+	PxVec3 vel = cuerpoD->getLinearVelocity();
 
 	// Comprobamos que tanto velocidad lineal como angular sean muy pequeñas
-	return vel.magnitude() < umbral || angVel.magnitude() < umbral;
+	return vel.magnitude() < umbral;
 
 }
 
 void Pelota::update(float deltaTime)
 {
-	if (!cuerpo) return;
-	cuerpo->setLinearDamping(cuerpo->getLinearDamping() + 0.0001);
+	if (!cuerpoD) return;
+	//cuerpoD->setLinearDamping(cuerpoD->getLinearDamping() + 0.0001);
 	//if (cuerpo->getLinearVelocity().magnitude() > 0) 
 
-	std::cout << cuerpo->getLinearVelocity().x << std::endl;
+	//std::cout << cuerpoD->getLinearVelocity().x << std::endl;
 }
 

@@ -71,8 +71,12 @@ namespace
 		if (key == 27)
 			exit(0);
 
-		if (!sCamera->handleKey(key, x, y))
-			keyPress(key, sCamera->getTransform());
+		/*if (!sCamera->handleKey(key, x, y))
+			keyPress(key, sCamera->getTransform());*/
+		if (!pelota || !pelota->estaArrastrando())
+			sCamera->handleKey(key, x, y);
+
+		keyPress(key, sCamera->getTransform());
 	}
 
 	void mouseCallback(int button, int state, int x, int y)
@@ -208,7 +212,7 @@ namespace
 void renderLoop()
 {
 	StartCounter();
-	sCamera = new Camera(PxVec3(50.0f, 50.0f, 50.0f), PxVec3(-0.6f, -0.2f, -0.7f));
+	sCamera = new Camera(PxVec3(-50.0f, 50.0f, 40.0f), PxVec3(-0.6f, -0.2f, -0.7f));
 
 	setupDefaultWindow("Simulacion Fisica Videojuegos");
 	setupDefaultRenderState();

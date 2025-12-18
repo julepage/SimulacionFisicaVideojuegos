@@ -24,7 +24,6 @@
     <ClCompile Include="FuenteFuego.cpp" />
     <ClCompile Include="Muelle.cpp" />
     <ClCompile Include="Flotacion.cpp" />
-    <ClCompile Include="Disparo.cpp" />
     <ClCompile Include="Pelota.cpp" />
     <ClCompile Include="SistemaSolidos.cpp" />
     <ClCompile Include="Solido.cpp" />
@@ -55,7 +54,6 @@
     <ClInclude Include="FuenteFuego.h" />
     <ClInclude Include="Muelle.h" />
     <ClInclude Include="Flotacion.h" />
-    <ClInclude Include="Disparo.h" />
     <ClInclude Include="Pelota.h" />
     <ClInclude Include="globales.h" />
     <ClInclude Include="SistemaSolidos.h" />

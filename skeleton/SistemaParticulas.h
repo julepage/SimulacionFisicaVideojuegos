@@ -111,6 +111,6 @@ private:
 	std::vector<Particula*> particulas;
 	std::vector<GeneradorFuerzas*> fuerzas;
 	//distancia maxima que se pueden alejar sin ser eliminadas
-	const float radioMax = 200.0f;
+	const float radioMax = 300.0f;
 };
 
